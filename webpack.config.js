@@ -2,11 +2,11 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  context: path.resolve(__dirname, 'client'),
+  context: path.resolve(__dirname, 'src/client'),
   entry: './main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/build/',
+    publicPath: '/dist/',
     filename: 'webpack-bundle.js',
   },
   devtool: 'source-map',
