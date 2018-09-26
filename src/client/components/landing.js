@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 
 const Landing = () => (
   <div className="Landing">
-    <Link>
-      <button>Lets SWAPI</button>
-    </Link>
+    <div className="landing__link__wrapper">
+      <Link to="/search" className="landing__swapi">
+        LETS SWAPI
+      </Link>
+    </div>
   </div>
 );
