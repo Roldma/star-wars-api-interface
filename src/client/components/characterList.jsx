@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
-const mapStateToProps = store => ({});
-const mapDispatchToProps = dispatch => ({});
 
 const CharList = () => (
   <div className="charlist">
@@ -13,7 +10,4 @@ const CharList = () => (
   </div>
 );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CharList);
+export default CharList;
