@@ -7,6 +7,7 @@ const Landing = () => (
       <Link to="/search" className="landing__swapi">
         LETS SWAPI
       </Link>
+      <p> TEST</p>
     </div>
   </div>
 );
