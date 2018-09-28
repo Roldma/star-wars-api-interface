@@ -4,18 +4,18 @@ import { connect } from 'react-redux';
 const mapStateToProps = store => ({});
 const mapDispatchToProps = dispatch => ({});
 
-class Search extends Component {
+class CharList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   render() {
     return (
-      <div className="searchContainer">
-        <form>
-          <input type="input" />
-        </form>
+      <div className="charlist">
+        <ul>
+          <li>item1</li>
+          <li>item2</li>
+        </ul>
       </div>
     );
   }
@@ -24,4 +24,4 @@ class Search extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Search);
+)(CharList);
