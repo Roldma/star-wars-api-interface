@@ -2,12 +2,11 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  context: path.resolve(__dirname, 'src/client'),
-  entry: './main.js',
+  entry: './src/client/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/',
-    filename: 'webpack-bundle.js',
+    filename: 'bundle.js',
   },
   devtool: 'source-map',
   devServer: {
@@ -18,6 +17,7 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
+        exclude: /node_modules/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
@@ -25,6 +25,9 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
         },
       },
     ],

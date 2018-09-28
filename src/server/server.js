@@ -14,11 +14,16 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(express.static(publicPath));
+/*
+* static route that will always serve up bundle.js
+*/
+app.use('/scripts', express.static(path.resolve(__dirname, '../../dist/')));
 
 app.get('*', (req, res) => {
-  res.sendfile(path.join(publicPath, 'index.html'));
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 app.listen(6969, () => {
+  console.log(__dirname);
   console.log('Server listening on port 6969');
 });
