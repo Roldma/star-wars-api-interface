@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(express.static(publicPath));
 /*
-* static route that will always serve up bundle
+* static route that will always serve up bundle.js
 */
 app.use('/scripts', express.static(path.resolve(__dirname, '../../dist/')));
 
