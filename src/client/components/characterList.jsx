@@ -5,20 +5,24 @@ class CharList extends Component {
   constructor() {
     super();
     this.state = {
-      chars: [],
+      chars: {},
+      charInfo: {},
     };
   }
 
   componentDidMount() {
-    this.CharList();
+    this.getCharList();
   }
 
-  async CharList() {
+  async getCharList() {
     try {
       const response = await axios.get('http://localhost:6969/characters');
       this.setState(() => {
-        const charArr = response.data.characters.map(char => char.name);
-        return { chars: charArr };
+        const updatedCharObj = {};
+        response.data.characters.forEach((char, ind) => {
+          updatedCharObj[ind] = [char.name, char.url];
+        });
+        return { chars: updatedCharObj };
       });
       console.log(response);
     } catch (error) {
@@ -26,12 +30,29 @@ class CharList extends Component {
     }
   }
 
+  /*
+  ** Need to Create get movie info functionality and onclick
+  */
+  async getMovieInfo() {
+    try {
+      if (Object.keys(this.state.chars).length > 0) {
+        const response = await axios.get('');
+      }
+    } catch (err) {
+      return console.log(err);
+    }
+  }
+
   render() {
     const { chars } = this.state;
-    const charsToDisplay = chars.map((char, ind) => <li key={`char+${ind}`}>{char}</li>);
+    let key = 0;
+    const charNames = Object.values(chars).map((char) => {
+      key += 1;
+      return <li key={`id${key}`}>{char[0]}</li>;
+    });
     return (
       <div className="charlist">
-        <ul>{charsToDisplay}</ul>
+        <ul>{charNames}</ul>
       </div>
     );
   }
