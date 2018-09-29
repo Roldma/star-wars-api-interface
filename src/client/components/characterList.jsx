@@ -31,7 +31,7 @@ class CharList extends Component {
   }
 
   /*
-  ** Need to Create get movie info functionality and onclick
+  ** Need to Create get movie info functionality and onclick and test out getMovieINfo middleware
   */
   async getMovieInfo() {
     try {
