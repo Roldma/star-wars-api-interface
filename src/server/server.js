@@ -18,6 +18,7 @@ app.use(express.static(publicPath));
 * static route that will always serve up bundle.js
 */
 app.use('/scripts', express.static(path.resolve(__dirname, '../../dist/')));
+app.use('/characters', express.static(path.resolve(__dirname, 'characters.json')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
