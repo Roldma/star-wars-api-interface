@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-// const apiController = require('./apiController');
+const apiController = require('./apiController');
 
 const app = express();
 const publicPath = path.resolve(__dirname, '../../public');
@@ -23,6 +23,8 @@ app.use('/characters', express.static(path.resolve(__dirname, 'characters.json')
 app.get('*', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
+
+app.get('/characters/:charId/movies', apiController.getMovies);
 
 app.listen(6969, () => {
   console.log(__dirname);
