@@ -6,8 +6,8 @@ class CharList extends Component {
     super();
     this.state = {
       chars: {},
-      charInfo: {},
     };
+    this.getMovieInfo = this.getMovieInfo.bind(this);
   }
 
   componentDidMount() {
@@ -19,12 +19,12 @@ class CharList extends Component {
       const response = await axios.get('http://localhost:6969/characters');
       this.setState(() => {
         const updatedCharObj = {};
-        response.data.characters.forEach((char, ind) => {
-          updatedCharObj[ind] = [char.name, char.url];
+        response.data.characters.forEach((char) => {
+          const { url } = char;
+          updatedCharObj[char.name] = { url };
         });
         return { chars: updatedCharObj };
       });
-      console.log(response);
     } catch (error) {
       return console.log(error);
     }
@@ -33,28 +33,33 @@ class CharList extends Component {
   /*
   ** Need to Create get movie info functionality and onclick and test out getMovieINfo middleware
   */
-  async getMovieInfo() {
+  async getMovieInfo(url) {
     try {
-      if (Object.keys(this.state.chars).length > 0) {
-        const response = await axios.get('');
-      }
+      console.log(url);
     } catch (err) {
-      return console.log(err);
+      console.log(err);
     }
   }
 
   render() {
     const { chars } = this.state;
     let key = 0;
-    const charNames = Object.values(chars).map((char) => {
+    const charNames = Object.entries(chars).map(([char, url]) => {
       key += 1;
-      return <li key={`id${key}`}>{char[0]}</li>;
+      return (
+        <div
+          key={`id${key}`}
+          onClick={(e) => {
+            this.getMovieInfo(url.url);
+          }}
+          value={url.url}
+        >
+          {char}
+        </div>
+      );
     });
-    return (
-      <div className="charlist">
-        <ul>{charNames}</ul>
-      </div>
-    );
+
+    return <div className="charlist">{charNames}</div>;
   }
 }
 
