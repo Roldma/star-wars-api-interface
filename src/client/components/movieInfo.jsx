@@ -1,9 +1,7 @@
 import React from 'react';
 
 const MovieInfo = (props) => {
-  // console.log(props);
   const { state } = props;
-  console.log('this is the selected Films Initially: ', state.selectedFilms);
 
   const info = Object.entries(state.chars[state.selectedChar].info).map(([key, value], index) => {
     if (key !== 'films') {
@@ -13,7 +11,6 @@ const MovieInfo = (props) => {
   const films = state.selectedFilms.map((value, index) => (
     <div key={`${value} ${index}`}>{value}</div>
   ));
-  // console.log('films: ', films);
 
   return (
     <div>
@@ -21,10 +18,7 @@ const MovieInfo = (props) => {
       <br />
       <div>
         Films with this Character:
-        {' '}
-        <br />
-        {' '}
-        {films}
+        <div>{films}</div>
       </div>
     </div>
   );
