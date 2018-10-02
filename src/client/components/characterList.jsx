@@ -30,71 +30,66 @@ class CharList extends Component {
         return { chars: updatedCharObj };
       });
     } catch (error) {
-      return console.log(error);
+      return error;
     }
   }
 
-  /*
-  ** Need to Create get movie info functionality and onclick and test out getMovieINfo middleware
-  */
   async getCharInfo(url) {
     try {
-      await axios
-        .get(url)
-        .then((response) => {
-          this.setState((currState) => {
-            const { chars, selectedFilms } = currState;
-            if (chars[response.data.name]) {
-              chars[response.data.name].info = response.data;
+      const charResults = await axios.get(url);
+      this.setState((currState) => {
+        const stateCopy = currState;
+        const { chars } = stateCopy;
+        const { data } = charResults;
 
-              currState.selectedChar = response.data.name;
-            } else {
-              chars[response.data.name] = {
-                info: response.data,
-              };
-              currState.selectedChar = response.data.name;
-            }
-
-            return currState;
-          });
-          this.getFilmInfo();
-        })
-        .catch((err) => {
-          console.log(err);
+        const validInfoObj = {};
+        Object.entries(data).forEach(([key, val]) => {
+          if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) validInfoObj[key] = val;
         });
+
+        console.log(validInfoObj);
+        if (chars[data.name]) {
+          chars[data.name].info = validInfoObj;
+          chars[data.name].info.films = data.films;
+          stateCopy.selectedChar = data.name;
+        } else {
+          chars[data.name] = { info: validInfoObj };
+          stateCopy.selectedChar = charResults.data.name;
+        }
+
+        return stateCopy;
+      });
+      console.log(this.state);
+
+      this.getFilmInfo();
     } catch (err) {
-      console.log(err);
+      return err;
     }
   }
 
   async getFilmInfo() {
     try {
-      console.log(this.state);
-      const filmsArr = [];
+      const { chars, selectedChar } = this.state;
+      const { films } = chars[selectedChar].info;
+      const filmsProms = films.map(async (url) => {
+        const response = await axios.get(url);
+        return {
+          title: response.data.title,
+          date: new Date(response.data.release_date).toDateString(),
+        };
+      });
 
-      const { films } = this.state.chars[this.state.selectedChar].info;
-      for (let i = 0; i < films.length; i += 1) {
-        axios
-          .get(films[i])
-          .then((response) => {
-            filmsArr.push(response.data.title);
-          })
-          .then(() => {
-            this.setState((currState) => {
-              currState.selectedFilms = filmsArr;
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      const selectedFilms = await Promise.all(filmsProms);
+
+      this.setState(currState => ({ ...currState, selectedFilms }));
+      this.componentDidUpdate();
+      console.log(this.state.selectedFilms);
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 
   render() {
-    console.log(this.state);
     const { chars, selectedChar, selectedFilms } = this.state;
     let key = 0;
     const charNames = Object.entries(chars).map(([char, url]) => {
@@ -113,9 +108,12 @@ class CharList extends Component {
 
     return (
       <div className="charlist">
-        {charNames}
+        <div>{charNames}</div>
+        <hr />
         {selectedChar && selectedFilms.length > 0 ? (
-          <MovieInfo state={this.state} />
+          <div>
+            <MovieInfo state={this.state} />
+          </div>
         ) : (
           <div>Dance Dance Dance</div>
         )}

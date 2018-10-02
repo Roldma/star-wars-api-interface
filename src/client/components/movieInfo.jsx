@@ -2,15 +2,26 @@ import React from 'react';
 
 const MovieInfo = (props) => {
   const { state } = props;
-
-  const info = Object.entries(state.chars[state.selectedChar].info).map(([key, value], index) => {
+  const { chars, selectedChar, selectedFilms } = state;
+  let uniqKey = 0;
+  const info = Object.entries(chars[selectedChar].info).map(([key, value]) => {
+    uniqKey += 1;
     if (key !== 'films') {
-      return <div key={`${key} ${index}`}>{`${key}: ${value} `}</div>;
+      return <div key={`${key} ${uniqKey}`}>{`${key}: ${value} `}</div>;
     }
   });
-  const films = state.selectedFilms.map((value, index) => (
-    <div key={`${value} ${index}`}>{value}</div>
-  ));
+
+  uniqKey = 0;
+
+  const films = selectedFilms.map((val) => {
+    uniqKey += 1;
+    return (
+      <div key={`movie${uniqKey}`}>
+        <span>{`title: ${val.title} `}</span>
+        <span>{`date: ${val.date}`}</span>
+      </div>
+    );
+  });
 
   return (
     <div>
