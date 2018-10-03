@@ -18,6 +18,10 @@ class CharList extends Component {
     this.getCharList();
   }
 
+  componentDidUpdate() {
+    this.getFilmInfo();
+  }
+
   async getCharList() {
     try {
       const response = await axios.get('http://localhost:6969/characters');
@@ -47,7 +51,6 @@ class CharList extends Component {
           if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) validInfoObj[key] = val;
         });
 
-        console.log(validInfoObj);
         if (chars[data.name]) {
           chars[data.name].info = validInfoObj;
           chars[data.name].info.films = data.films;
@@ -61,7 +64,7 @@ class CharList extends Component {
       });
       console.log(this.state);
 
-      this.getFilmInfo();
+      // this.getFilmInfo();
     } catch (err) {
       return err;
     }
@@ -82,7 +85,6 @@ class CharList extends Component {
       const selectedFilms = await Promise.all(filmsProms);
 
       this.setState(currState => ({ ...currState, selectedFilms }));
-      
     } catch (error) {
       return error;
     }
@@ -104,18 +106,17 @@ class CharList extends Component {
         </div>
       );
     });
+    const MovieInfoComp = (
+      <div>
+        <MovieInfo state={this.state} />
+      </div>
+    );
 
     return (
       <div className="charlist">
         <div>{charNames}</div>
         <hr />
-        {selectedChar && selectedFilms.length > 0 ? (
-          <div>
-            <MovieInfo state={this.state} />
-          </div>
-        ) : (
-          <div>Dance Dance Dance</div>
-        )}
+        {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : <div />}
       </div>
     );
   }
