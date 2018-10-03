@@ -8,13 +8,18 @@ class CharList extends Component {
     this.state = {
       selectedChar: null,
       selectedFilms: [],
-      chars: {}
+      chars: {},
     };
-    this.getMovieInfo = this.getMovieInfo.bind(this);
+    this.getCharInfo = this.getCharInfo.bind(this);
+    this.getFilmInfo = this.getFilmInfo.bind(this);
   }
 
   componentDidMount() {
     this.getCharList();
+  }
+
+  componentDidUpdate() {
+    this.getFilmInfo();
   }
 
   async getCharList() {
@@ -22,62 +27,70 @@ class CharList extends Component {
       const response = await axios.get('http://localhost:6969/characters');
       this.setState(() => {
         const updatedCharObj = {};
-        response.data.characters.forEach(char => {
+        response.data.characters.forEach((char) => {
           const { url } = char;
           updatedCharObj[char.name] = { url };
         });
         return { chars: updatedCharObj };
       });
     } catch (error) {
-      return console.log(error);
+      return error;
     }
   }
 
-  /*
-  ** Need to Create get movie info functionality and onclick and test out getMovieINfo middleware
-  */
-  async getMovieInfo(url) {
+  async getCharInfo(url) {
     try {
+      const charResults = await axios.get(url);
+      this.setState((currState) => {
+        const stateCopy = currState;
+        const { chars } = stateCopy;
+        const { data } = charResults;
+
+        const validInfoObj = {};
+        Object.entries(data).forEach(([key, val]) => {
+          if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) validInfoObj[key] = val;
+        });
+
+        if (chars[data.name]) {
+          chars[data.name].info = validInfoObj;
+          chars[data.name].info.films = data.films;
+          stateCopy.selectedChar = data.name;
+        } else {
+          chars[data.name] = { info: validInfoObj };
+          stateCopy.selectedChar = charResults.data.name;
+        }
+
+        return stateCopy;
+      });
       console.log(this.state);
-      const results = await axios.get(url);
-      const films = [];
 
-      for (let i = 0; i < results.data.films.length; i++) {
-        axios
-          .get(results.data.films[i])
-          .then(function(response) {
-            films.push(response.data.title);
-          })
-          .then(() => {
-            this.setState(currState => {
-              // console.log(response);
-              // console.log('This.State: ', this.state);
-              if (currState.chars[results.data.name]) {
-                currState.chars[results.data.name].info = results.data;
-                currState.selectedFilms = films;
-                currState.selectedChar = results.data.name;
-              } else {
-                currState.chars[results.data.name] = {
-                  info: results.data
-                };
-                currState.selectedFilms = films;
-                currState.selectedChar = results.data.name;
-              }
-
-              return currState;
-            });
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
+      // this.getFilmInfo();
     } catch (err) {
-      console.log(err);
+      return err;
+    }
+  }
+
+  async getFilmInfo() {
+    try {
+      const { chars, selectedChar } = this.state;
+      const { films } = chars[selectedChar].info;
+      const filmsProms = films.map(async (url) => {
+        const response = await axios.get(url);
+        return {
+          title: response.data.title,
+          date: new Date(response.data.release_date).toDateString(),
+        };
+      });
+
+      const selectedFilms = await Promise.all(filmsProms);
+
+      this.setState(currState => ({ ...currState, selectedFilms }));
+    } catch (error) {
+      return error;
     }
   }
 
   render() {
-    console.log(this.state);
     const { chars, selectedChar, selectedFilms } = this.state;
     let key = 0;
     const charNames = Object.entries(chars).map(([char, url]) => {
@@ -85,23 +98,25 @@ class CharList extends Component {
       return (
         <div
           key={`id${key}`}
-          onClick={e => {
-            this.getMovieInfo(url.url);
+          onClick={(e) => {
+            this.getCharInfo(url.url);
           }}
         >
           {char}
         </div>
       );
     });
+    const MovieInfoComp = (
+      <div>
+        <MovieInfo state={this.state} />
+      </div>
+    );
 
     return (
       <div className="charlist">
-        {charNames}
-        {selectedChar && selectedFilms.length > 0 ? (
-          <MovieInfo state={this.state} />
-        ) : (
-          <div>Dance Dance Dance</div>
-        )}
+        <div>{charNames}</div>
+        <hr />
+        {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : <div />}
       </div>
     );
   }
