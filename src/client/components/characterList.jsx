@@ -83,7 +83,6 @@ class CharList extends Component {
       });
 
       const selectedFilms = await Promise.all(filmsProms);
-
       this.setState(currState => ({ ...currState, selectedFilms }));
     } catch (error) {
       return error;
@@ -92,6 +91,7 @@ class CharList extends Component {
 
   render() {
     const { chars, selectedChar, selectedFilms } = this.state;
+    const filler = <div>No Character Selected</div>;
     let key = 0;
     const charNames = Object.entries(chars).map(([char, url]) => {
       key += 1;
@@ -116,7 +116,7 @@ class CharList extends Component {
       <div className="charlist">
         <div>{charNames}</div>
         <hr />
-        {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : <div />}
+        {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler}
       </div>
     );
   }

@@ -18,13 +18,14 @@ const MovieInfo = (props) => {
     return (
       <div key={`movie${uniqKey}`}>
         <span>{`title: ${val.title} `}</span>
-        <span>{`date: ${val.date}`}</span>
+        <div>{`date: ${val.date}`}</div>
       </div>
     );
   });
 
   return (
     <div>
+      <div>{selectedChar}</div>
       <div>{info}</div>
       <br />
       <div>
