@@ -24,7 +24,8 @@ class CharList extends Component {
 
   async getCharList() {
     try {
-      const response = await axios.get('http://localhost:6969/characters');
+      const urlString = 'http://localhost:6969/characters';
+      const response = await axios.get(urlString);
       this.setState(() => {
         const updatedCharObj = {};
         response.data.characters.forEach((char) => {
