@@ -5,8 +5,13 @@ class searchBar extends Component {
     super();
     this.state = {
       inputValue: '',
+      finalStr: '',
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit() {}
+  handleSubmit(e) {}
 }
+
+export default searchBar;
