@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+
 import MovieInfo from './movieInfo.jsx';
-import SearchBar from './searchBar.jsx';
 
 class CharList extends Component {
   constructor() {
@@ -116,9 +116,6 @@ class CharList extends Component {
       <div>
         <div className="charlist">
           <div>{charNames}</div>
-        </div>
-        <div>
-          <SearchBar />
         </div>
 
         <hr />

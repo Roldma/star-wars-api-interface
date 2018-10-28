@@ -6,7 +6,6 @@ class SearchBar extends Component {
     super();
     this.state = {
       inputValue: '',
-      finalStr: '',
     };
     this.textFill = this.textFill.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,9 +16,10 @@ class SearchBar extends Component {
   }
 
   handleSubmit(e) {
-    const { inputValue } = this.state;
-    this.setState({ finalStr: inputValue });
     e.preventDefault();
+    const { inputValue } = this.state;
+    const { makeRequest } = this.props;
+    makeRequest(inputValue);
   }
 
   render() {
@@ -27,7 +27,6 @@ class SearchBar extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <input type="text" id="search_text_input" onChange={this.textFill} />
-          <input type="submit" value="Pew pew" />
           <div />
         </form>
       </div>
