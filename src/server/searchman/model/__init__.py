@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class PlanetResults:
+class Planet:
     def __init__(self, climate, name, residents):
         self.climate = climate
         self.name = name

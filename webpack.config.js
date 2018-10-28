@@ -4,9 +4,9 @@ module.exports = {
   mode: 'development',
   entry: ['@babel/polyfill', './src/client/index.js'],
   output: {
-    path: path.resolve(__dirname, './static/'),
-
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, './static'),
+    publicPath: '/static/',
+    filename: 'newbundle.js',
   },
   devtool: 'source-map',
   devServer: {

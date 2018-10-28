@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import MovieInfo from './movieInfo.jsx';
+import SearchBar from './searchBar.jsx';
 
 class CharList extends Component {
   constructor() {
@@ -24,8 +25,8 @@ class CharList extends Component {
 
   async getCharList() {
     try {
-      const urlString = 'http://localhost:6969/characters';
-      const response = await axios.get(urlString);
+      const charUrl = 'http://localhost:6969/characters';
+      const response = await axios.get(charUrl);
       this.setState(() => {
         const updatedCharObj = {};
         response.data.characters.forEach((char) => {
@@ -64,8 +65,6 @@ class CharList extends Component {
         return stateCopy;
       });
       console.log(this.state);
-
-      // this.getFilmInfo();
     } catch (err) {
       return err;
     }
@@ -114,10 +113,19 @@ class CharList extends Component {
     );
 
     return (
-      <div className="charlist">
-        <div>{charNames}</div>
+      <div>
+        <div className="charlist">
+          <div>{charNames}</div>
+        </div>
+        <div>
+          <SearchBar />
+        </div>
+
         <hr />
-        {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler}
+
+        <div className="click_results">
+          {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler}
+        </div>
       </div>
     );
   }
