@@ -26,7 +26,12 @@ class SearchBar extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" id="search_text_input" onChange={this.textFill} />
+          <input
+            className="inputBars"
+            type="text"
+            id="search_text_input"
+            onChange={this.textFill}
+          />
           <div />
         </form>
       </div>

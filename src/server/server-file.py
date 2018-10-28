@@ -8,10 +8,9 @@ def index_file():
     return render_template("index.html")
 
 
-@app.route("/scripts/bundle.js")
+@app.route("/scripts/bundle81.js")
 def scripts():
-    app.send_static_file("newbundle.js")
-    return app.send_static_file("newbundle.js.map")
+    return app.send_static_file("bundle81.js")
 
 
 @app.route("/characters")
@@ -19,8 +18,9 @@ def characters():
     return app.send_static_file("characters.json")
 
 
-# @app.route("/search")
-# def get_search_results(req):
+@app.route("/search")
+def get_search_results():
+    print(request.args)
 
 
 ### COMMANd flask run -h localhost -p 6969

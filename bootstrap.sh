@@ -1,4 +1,4 @@
 #!/bin/sh
-export FLASK_APP=./src/server/server.py
-source $(pipenv --venv)/bin/activate
+export FLASK_APP=./src/server/server-file.py
+export FLASK_ENV=development
 flask run -h localhost -p 6969

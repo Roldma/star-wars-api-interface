@@ -11,6 +11,7 @@ class CharList extends Component {
       selectedFilms: [],
       chars: {},
     };
+    this.isCancelled = false;
     this.getCharInfo = this.getCharInfo.bind(this);
     this.getFilmInfo = this.getFilmInfo.bind(this);
   }
@@ -23,10 +24,15 @@ class CharList extends Component {
     this.getFilmInfo();
   }
 
+  componentWillUnmount() {
+    this.isCancelled = true;
+  }
+
   async getCharList() {
     try {
       const charUrl = 'http://localhost:6969/characters';
       const response = await axios.get(charUrl);
+
       this.setState(() => {
         const updatedCharObj = {};
         response.data.characters.forEach((char) => {
@@ -83,7 +89,9 @@ class CharList extends Component {
       });
 
       const selectedFilms = await Promise.all(filmsProms);
-      this.setState(currState => ({ ...currState, selectedFilms }));
+      if (!this.isCancelled) {
+        this.setState(currState => ({ ...currState, selectedFilms }));
+      }
     } catch (error) {
       return error;
     }
