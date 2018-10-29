@@ -4,7 +4,7 @@ const path = require('path');
 const apiController = require('./apiController');
 
 const app = express();
-const publicPath = path.resolve(__dirname, '../../static');
+const publicPath = path.resolve(__dirname, '../../public');
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
