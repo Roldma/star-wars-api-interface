@@ -10,6 +10,7 @@ class CharList extends Component {
       selectedChar: null,
       selectedFilms: [],
       chars: {},
+      isError: false,
     };
     this.isCancelled = false;
     this.getCharInfo = this.getCharInfo.bind(this);
@@ -17,22 +18,23 @@ class CharList extends Component {
   }
 
   componentDidMount() {
-    this.getCharList();
+    this.getInitialCharList();
   }
 
-  componentDidUpdate() {
-    this.getFilmInfo();
-  }
-
+  /**
+   * If user clicks back while async request is in progress, this will prevent state update
+   */
   componentWillUnmount() {
     this.isCancelled = true;
   }
 
-  async getCharList() {
+  /**
+   * Get Initial character list
+   * */
+  async getInitialCharList() {
     try {
       const charUrl = 'http://localhost:6969/characters';
       const response = await axios.get(charUrl);
-
       this.setState(() => {
         const updatedCharObj = {};
         response.data.characters.forEach((char) => {
@@ -42,13 +44,21 @@ class CharList extends Component {
         return { chars: updatedCharObj };
       });
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
+  /**
+   *
+   * @param {string} url - used for making request
+   * Invoked when person clicks a character, triggers state update, then triggers react lifecyle
+   * component did update.
+   */
   async getCharInfo(url) {
     try {
       const charResults = await axios.get(url);
+      console.log(charResults);
+
       this.setState((currState) => {
         const stateCopy = currState;
         const { chars } = stateCopy;
@@ -56,7 +66,9 @@ class CharList extends Component {
 
         const validInfoObj = {};
         Object.entries(data).forEach(([key, val]) => {
-          if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) validInfoObj[key] = val;
+          if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) {
+            validInfoObj[key] = val;
+          }
         });
 
         if (chars[data.name]) {
@@ -68,11 +80,11 @@ class CharList extends Component {
           stateCopy.selectedChar = charResults.data.name;
         }
 
-        return stateCopy;
+        return { ...stateCopy, isError: false };
       });
-      console.log(this.state);
+      this.getFilmInfo();
     } catch (err) {
-      return err;
+      return this.setState({ isError: true });
     }
   }
 
@@ -80,7 +92,8 @@ class CharList extends Component {
     try {
       const { chars, selectedChar } = this.state;
       const { films } = chars[selectedChar].info;
-      const filmsProms = films.map(async (url) => {
+
+      const filmsPromises = films.map(async (url) => {
         const response = await axios.get(url);
         return {
           title: response.data.title,
@@ -88,18 +101,29 @@ class CharList extends Component {
         };
       });
 
-      const selectedFilms = await Promise.all(filmsProms);
+      const selectedFilms = await Promise.all(filmsPromises);
+
       if (!this.isCancelled) {
         this.setState(currState => ({ ...currState, selectedFilms }));
       }
     } catch (error) {
-      return error;
+      console.log(error);
+      return this.setState({ isError: true });
     }
   }
 
   render() {
-    const { chars, selectedChar, selectedFilms } = this.state;
-    const filler = <div>No Character Selected</div>;
+    const {
+      chars, selectedChar, selectedFilms, isError,
+    } = this.state;
+
+    const filler = () => {
+      if (isError) {
+        return <div>There was an error obtaining information for this character</div>;
+      }
+      return <div>No Character Selected</div>;
+    };
+
     let key = 0;
     const charNames = Object.entries(chars).map(([char, url]) => {
       key += 1;
@@ -114,6 +138,7 @@ class CharList extends Component {
         </div>
       );
     });
+
     const MovieInfoComp = (
       <div>
         <MovieInfo state={this.state} />
@@ -129,7 +154,7 @@ class CharList extends Component {
         <hr />
 
         <div className="click_results">
-          {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler}
+          {!isError && selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler()}
         </div>
       </div>
     );

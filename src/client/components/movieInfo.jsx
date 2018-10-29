@@ -3,7 +3,9 @@ import React from 'react';
 const MovieInfo = (props) => {
   const { state } = props;
   const { chars, selectedChar, selectedFilms } = state;
+
   let uniqKey = 0;
+
   const info = Object.entries(chars[selectedChar].info).map(([key, value]) => {
     uniqKey += 1;
     if (key !== 'films') {
@@ -25,12 +27,14 @@ const MovieInfo = (props) => {
 
   return (
     <div>
-      <div>{selectedChar}</div>
-      <div>{info}</div>
-      <br />
       <div>
-        Films with this Character:
-        <div>{films}</div>
+        <div>{selectedChar}</div>
+        <div>{info}</div>
+        <br />
+        <div>
+          Films with this Character:
+          <div>{films}</div>
+        </div>
       </div>
     </div>
   );

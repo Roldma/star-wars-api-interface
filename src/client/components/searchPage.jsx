@@ -8,10 +8,18 @@ class SearchPage extends Component {
     super();
     this.state = {
       searchString: '',
+      searchResults: {},
     };
     this.getResults = this.getResults.bind(this);
   }
 
+  componentDidUpdate() {}
+
+  /**
+   *
+   * @param {string} queryStr - string passed in from text input search bar used for making
+   * request
+   */
   async getResults(queryStr) {
     try {
       this.setState({ searchString: queryStr });
