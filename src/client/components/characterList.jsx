@@ -58,31 +58,32 @@ class CharList extends Component {
     try {
       const charResults = await axios.get(url);
       console.log(charResults);
+      if (!this.isCancelled) {
+        this.setState((currState) => {
+          const stateCopy = currState;
+          const { chars } = stateCopy;
+          const { data } = charResults;
 
-      this.setState((currState) => {
-        const stateCopy = currState;
-        const { chars } = stateCopy;
-        const { data } = charResults;
+          const validInfoObj = {};
+          Object.entries(data).forEach(([key, val]) => {
+            if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) {
+              validInfoObj[key] = val;
+            }
+          });
 
-        const validInfoObj = {};
-        Object.entries(data).forEach(([key, val]) => {
-          if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) {
-            validInfoObj[key] = val;
+          if (chars[data.name]) {
+            chars[data.name].info = validInfoObj;
+            chars[data.name].info.films = data.films;
+            stateCopy.selectedChar = data.name;
+          } else {
+            chars[data.name] = { info: validInfoObj };
+            stateCopy.selectedChar = charResults.data.name;
           }
+
+          return { ...stateCopy, isError: false };
         });
-
-        if (chars[data.name]) {
-          chars[data.name].info = validInfoObj;
-          chars[data.name].info.films = data.films;
-          stateCopy.selectedChar = data.name;
-        } else {
-          chars[data.name] = { info: validInfoObj };
-          stateCopy.selectedChar = charResults.data.name;
-        }
-
-        return { ...stateCopy, isError: false };
-      });
-      this.getFilmInfo();
+        this.getFilmInfo();
+      }
     } catch (err) {
       return this.setState({ isError: true });
     }
@@ -119,7 +120,12 @@ class CharList extends Component {
 
     const filler = () => {
       if (isError) {
-        return <div>There was an error obtaining information for this character</div>;
+        return (
+          <div>
+            There was an error obtaining information for this character
+            <img src="/img/404/star-wars404.jpg" alt="Character information Not found" />
+          </div>
+        );
       }
       return <div>No Character Selected</div>;
     };

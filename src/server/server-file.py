@@ -18,6 +18,11 @@ def characters():
     return app.send_static_file("characters.json")
 
 
+@app.route("/img/404/star-wars404.jpg")
+def img404():
+    return app.send_static_file("star-wars404.jpg")
+
+
 @app.route("/search")
 def get_search_results():
     print(request.args)
