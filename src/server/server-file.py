@@ -8,9 +8,9 @@ def index_file():
     return render_template("index.html")
 
 
-@app.route("/scripts/bundle81.js")
+@app.route("/scripts/bundle.js")
 def scripts():
-    return app.send_static_file("bundle81.js")
+    return app.send_static_file("bundle.js")
 
 
 @app.route("/characters")
