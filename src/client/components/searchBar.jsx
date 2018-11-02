@@ -16,10 +16,11 @@ class SearchBar extends Component {
   }
 
   handleSubmit(e) {
-    e.preventDefault();
     const { inputValue } = this.state;
     const { makeRequest } = this.props;
     makeRequest(inputValue);
+    this.setState({ inputValue: '' });
+    e.preventDefault();
   }
 
   render() {
@@ -31,6 +32,7 @@ class SearchBar extends Component {
             type="text"
             id="search_text_input"
             onChange={this.textFill}
+            value={this.state.inputValue}
           />
           <div />
         </form>
