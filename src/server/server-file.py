@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+import api_controller
+
+from api_controller import SearchResults
+from api_controller import create_search_results
+from flask import Flask, render_template
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
 
@@ -23,9 +27,11 @@ def img404():
     return app.send_static_file("star-wars404.jpg")
 
 
-@app.route("/search")
-def get_search_results():
-    print(request.args)
+@app.route("/api/search/<query_string>")
+def get_search_results(query_string):
+    results = create_search_results(query_string)
+    print("AFTER NEW INSTANCE", results)
+    return results
 
 
 ### COMMANd flask run -h localhost -p 6969
