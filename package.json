@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack; node ./src/server/server.js",
-    "pyserver": "webpack; export FLASK_APP=./src/server/server.py;export FLASK_ENV=development; flask run -h localhost -p 6969",
+    "pyserver": "./bootstrap.sh",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
