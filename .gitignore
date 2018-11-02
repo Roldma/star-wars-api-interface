@@ -2,3 +2,10 @@ node_modules/
 .vscode
 static/bundle.js.map
 static/bundle.js
+
+# python stuff
+__pycache__/
+*.py[cod]
+*.pyc
+# Installer logs
+pip-log.txt
