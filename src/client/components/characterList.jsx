@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+
 import MovieInfo from './movieInfo.jsx';
 
 class CharList extends Component {
@@ -9,23 +10,31 @@ class CharList extends Component {
       selectedChar: null,
       selectedFilms: [],
       chars: {},
+      isError: false,
     };
+    this.isCancelled = false;
     this.getCharInfo = this.getCharInfo.bind(this);
     this.getFilmInfo = this.getFilmInfo.bind(this);
   }
 
   componentDidMount() {
-    this.getCharList();
+    this.getInitialCharList();
   }
 
-  componentDidUpdate() {
-    this.getFilmInfo();
+  /**
+   * If user clicks back while async request is in progress, this will prevent state update
+   */
+  componentWillUnmount() {
+    this.isCancelled = true;
   }
 
-  async getCharList() {
+  /**
+   * Get Initial character list
+   * */
+  async getInitialCharList() {
     try {
-      const urlString = 'http://localhost:6969/characters';
-      const response = await axios.get(urlString);
+      const charUrl = 'http://localhost:6969/characters';
+      const response = await axios.get(charUrl);
       this.setState(() => {
         const updatedCharObj = {};
         response.data.characters.forEach((char) => {
@@ -35,39 +44,48 @@ class CharList extends Component {
         return { chars: updatedCharObj };
       });
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
+  /**
+   *
+   * @param {string} url - used for making request
+   * Invoked when person clicks a character, triggers state update, then triggers react lifecyle
+   * component did update.
+   */
   async getCharInfo(url) {
     try {
       const charResults = await axios.get(url);
-      this.setState((currState) => {
-        const stateCopy = currState;
-        const { chars } = stateCopy;
-        const { data } = charResults;
+      console.log(charResults);
+      if (!this.isCancelled) {
+        this.setState((currState) => {
+          const stateCopy = currState;
+          const { chars } = stateCopy;
+          const { data } = charResults;
 
-        const validInfoObj = {};
-        Object.entries(data).forEach(([key, val]) => {
-          if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) validInfoObj[key] = val;
+          const validInfoObj = {};
+          Object.entries(data).forEach(([key, val]) => {
+            if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) {
+              validInfoObj[key] = val;
+            }
+          });
+
+          if (chars[data.name]) {
+            chars[data.name].info = validInfoObj;
+            chars[data.name].info.films = data.films;
+            stateCopy.selectedChar = data.name;
+          } else {
+            chars[data.name] = { info: validInfoObj };
+            stateCopy.selectedChar = charResults.data.name;
+          }
+
+          return { ...stateCopy, isError: false };
         });
-
-        if (chars[data.name]) {
-          chars[data.name].info = validInfoObj;
-          chars[data.name].info.films = data.films;
-          stateCopy.selectedChar = data.name;
-        } else {
-          chars[data.name] = { info: validInfoObj };
-          stateCopy.selectedChar = charResults.data.name;
-        }
-
-        return stateCopy;
-      });
-      console.log(this.state);
-
-      // this.getFilmInfo();
+        this.getFilmInfo();
+      }
     } catch (err) {
-      return err;
+      return this.setState({ isError: true });
     }
   }
 
@@ -75,7 +93,8 @@ class CharList extends Component {
     try {
       const { chars, selectedChar } = this.state;
       const { films } = chars[selectedChar].info;
-      const filmsProms = films.map(async (url) => {
+
+      const filmsPromises = films.map(async (url) => {
         const response = await axios.get(url);
         return {
           title: response.data.title,
@@ -83,16 +102,34 @@ class CharList extends Component {
         };
       });
 
-      const selectedFilms = await Promise.all(filmsProms);
-      this.setState(currState => ({ ...currState, selectedFilms }));
+      const selectedFilms = await Promise.all(filmsPromises);
+
+      if (!this.isCancelled) {
+        this.setState(currState => ({ ...currState, selectedFilms }));
+      }
     } catch (error) {
-      return error;
+      console.log(error);
+      return this.setState({ isError: true });
     }
   }
 
   render() {
-    const { chars, selectedChar, selectedFilms } = this.state;
-    const filler = <div>No Character Selected</div>;
+    const {
+      chars, selectedChar, selectedFilms, isError,
+    } = this.state;
+
+    const filler = () => {
+      if (isError) {
+        return (
+          <div>
+            There was an error obtaining information for this character
+            <img src="/img/404/star-wars404.jpg" alt="Character information Not found" />
+          </div>
+        );
+      }
+      return <div>No Character Selected</div>;
+    };
+
     let key = 0;
     const charNames = Object.entries(chars).map(([char, url]) => {
       key += 1;
@@ -107,6 +144,7 @@ class CharList extends Component {
         </div>
       );
     });
+
     const MovieInfoComp = (
       <div>
         <MovieInfo state={this.state} />
@@ -114,10 +152,16 @@ class CharList extends Component {
     );
 
     return (
-      <div className="charlist">
-        <div>{charNames}</div>
+      <div>
+        <div className="charlist">
+          <div>{charNames}</div>
+        </div>
+
         <hr />
-        {selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler}
+
+        <div className="click_results">
+          {!isError && selectedChar && selectedFilms.length > 0 ? MovieInfoComp : filler()}
+        </div>
       </div>
     );
   }

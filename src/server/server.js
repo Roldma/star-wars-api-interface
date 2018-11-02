@@ -17,14 +17,14 @@ app.use(express.static(publicPath));
 /*
 * static route that will always serve up bundle.js
 */
-app.use('/scripts', express.static(path.resolve(__dirname, '../../dist/')));
-app.use('/characters', express.static(path.resolve(__dirname, 'characters.json')));
+app.use('/scripts', express.static(path.resolve(__dirname, '../../static/')));
+app.use('/characters', express.static(path.resolve(__dirname, '../../static/characters.json')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-app.get('/characters/:charId/movies', apiController.getMovies);
+// app.get('/characters/:charId/movies', apiController.getMovies);
 
 app.listen(6969, () => {
   console.log(__dirname);
