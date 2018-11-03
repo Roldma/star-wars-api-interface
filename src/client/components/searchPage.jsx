@@ -23,9 +23,11 @@ class SearchPage extends Component {
   async getResults(queryStr) {
     try {
       await this.setState({ searchString: queryStr });
+
       const { searchString } = this.state;
       const urlSearchString = `http://localhost:6969/api/search/${searchString}`;
       const searchResults = await axios.get(urlSearchString);
+
       this.setState({ searchString: '' });
       console.log(searchResults);
     } catch (err) {
