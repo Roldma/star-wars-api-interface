@@ -105,7 +105,7 @@ class CharList extends Component {
       const selectedFilms = await Promise.all(filmsPromises);
 
       if (!this.isCancelled) {
-        this.setState(currState => ({ ...currState, selectedFilms }));
+        await this.setState(currState => ({ ...currState, selectedFilms }));
       }
     } catch (error) {
       console.log(error);
