@@ -9,6 +9,7 @@ class SearchPage extends Component {
     this.state = {
       searchString: '',
       searchResults: {},
+      searchCategory: '',
     };
     this.getResults = this.getResults.bind(this);
   }
@@ -17,18 +18,19 @@ class SearchPage extends Component {
 
   /**
    *
-   * @param {string} queryStr - string passed in from text input search bar used for making
-   * request
+   * @param {string} queryStr - String passed in from text input search bar to make request
+   *
    */
-  async getResults(queryStr) {
+  async getResults(queryStr, category) {
     try {
-      await this.setState({ searchString: queryStr });
+      await this.setState({ searchString: queryStr, searchCategory: category });
 
-      const { searchString } = this.state;
-      const urlSearchString = `http://localhost:6969/api/search/${searchString}`;
+      const { searchString, searchCategory } = this.state;
+      const urlSearchString = `http://localhost:6969/api/search/${searchCategory}/${searchString}`;
       const searchResults = await axios.get(urlSearchString);
 
       this.setState({ searchString: '' });
+
       console.log(searchResults);
     } catch (err) {
       console.log(err);
