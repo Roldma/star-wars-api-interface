@@ -12,8 +12,13 @@ def index_file():
 
 
 @app.route("/scripts/bundle.js")
-def scripts():
+def bundle():
     return app.send_static_file("bundle.js")
+
+
+@app.route("/scripts/bundle.js")
+def bundle_map():
+    return app.send_static_file("bundle.js.map")
 
 
 @app.route("/characters")
@@ -26,10 +31,11 @@ def img404():
     return app.send_static_file("star-wars404.jpg")
 
 
-@app.route("/api/search/<query_string>")
-def get_search_results(query_string):
-    results = SearchResults.create_search_results(query_string)
-    print("AFTER NEW INSTANCE", results)
+@app.route("/api/search/<category>/<qstring>")
+def get_search_results(category, qstring):
+    print("in here")
+    query = (category, qstring)
+    results = SearchResults.create_search_results(query)
     return results
 
 
