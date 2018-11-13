@@ -1,4 +1,4 @@
-# star-wars-api-challenge
+# Star Wars api interface
 
 #### Start your virtual environment with pipenv shell then run pipenv install.
 
