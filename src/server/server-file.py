@@ -1,5 +1,7 @@
 import api_controller
+import db_controller
 
+from db_controller import redis_instance
 from api_controller import SearchResults
 from flask import Flask, render_template
 
@@ -8,6 +10,7 @@ app = Flask(__name__, static_folder="../../static", template_folder="../../publi
 
 @app.route("/")
 def index_file():
+    redis_instance.db_test()
     return render_template("index.html")
 
 

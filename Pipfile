@@ -9,6 +9,7 @@ name = "pypi"
 flask = "*"
 marshmallow = "*"
 requests = "*"
+redis = "*"
 
 [requires]
 python_version = "3.6"
