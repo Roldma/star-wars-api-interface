@@ -5,11 +5,12 @@ from flask import jsonify
 
 
 class SearchResults:
-    """Class to make get request to server based on parameters, and return in json format
+    """
     Parameters
     ----------
     query: tuple 
-           First element is the category from radio button, Second element is the user input string from search bar"""
+           First element is the category from radio button, Second element is the user input string from search bar
+    """
 
     def __init__(self, query):
         self.results = self.get_request(query)
@@ -33,4 +34,3 @@ class SearchResults:
 def create_search_results(query):
     search_results = SearchResults(query)
     return search_results.results
-
