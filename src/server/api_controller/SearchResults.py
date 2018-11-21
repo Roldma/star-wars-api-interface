@@ -1,4 +1,4 @@
-"""SearchResults Instantiated which contains response from SWAPI (in member results)"""
+"""SearchResults contains response from SWAPI (in member results)"""
 
 import requests
 from flask import jsonify

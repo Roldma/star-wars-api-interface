@@ -1,16 +1,16 @@
 import api_controller
 import db_controller
 
+from flask import Flask, render_template
+
 from db_controller import redis_instance
 from api_controller import SearchResults
-from flask import Flask, render_template
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
 
 
 @app.route("/")
 def index_file():
-    # redis_instance.connection()
     return render_template("index.html")
 
 
@@ -36,7 +36,15 @@ def img404():
 
 @app.route("/api/search/<category>/<qstring>")
 def search_results_and_update_recent(category, qstring):
-    redis_instance.redis_conn().update_recent_search(qstring)
+    """
+    Parameters
+    ----------
+    category: string
+    qstring: string 
+    """
+    redis_connection = redis_instance.redis_conn()
+    redis_connection.update_recent_search(qstring)
+
     query = (category, qstring)
     results = SearchResults.create_search_results(query)
     return results
