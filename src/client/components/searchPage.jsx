@@ -33,7 +33,7 @@ class SearchPage extends Component {
 
       console.log(searchResults);
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   }
 
