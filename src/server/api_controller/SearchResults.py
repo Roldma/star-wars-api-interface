@@ -35,7 +35,7 @@ class SearchResults:
         self._results = value
 
     def __repr__(self):
-        return "{} Results return from SWAPI".format(self.results)
+        return "{} Response from SWAPI".format(self.results)
 
 
 def create_search_results(query):

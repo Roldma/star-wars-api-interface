@@ -2,23 +2,26 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import SearchBar from './searchBar.jsx';
+import RecentSearch from './recentSearch.jsx';
 
 class SearchPage extends Component {
   constructor() {
     super();
     this.state = {
+      recentSearches: null,
       searchString: '',
-      searchResults: {},
       searchCategory: '',
+      searchResults: {},
     };
     this.getResults = this.getResults.bind(this);
+    this.getRecentSearch = this.getRecentSearch.bind(this);
   }
 
   componentDidUpdate() {}
 
   /**
    *
-   * @param {string} queryStr - String passed in from text input search bar to make request
+   * @param {string} queryStr - String passed in from text input search bar
    *
    */
   async getResults(queryStr, category) {
@@ -30,10 +33,16 @@ class SearchPage extends Component {
       const searchResults = await axios.get(urlSearchString);
 
       this.setState({ searchString: '' });
-
       console.log(searchResults);
     } catch (err) {
       throw err;
+    }
+  }
+
+  async getRecentSearch() {
+    try {
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -41,6 +50,7 @@ class SearchPage extends Component {
     return (
       <div>
         <SearchBar makeRequest={this.getResults} />
+        <RecentSearch />
       </div>
     );
   }
