@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder="../../static", template_folder="../../publi
 
 @app.route("/")
 def index_file():
-    redis_instance.db_test()
+    # redis_instance.connection()
     return render_template("index.html")
 
 
@@ -35,8 +35,8 @@ def img404():
 
 
 @app.route("/api/search/<category>/<qstring>")
-def get_search_results(category, qstring):
-    print("in here")
+def search_results_and_update_recent(category, qstring):
+    redis_instance.redis_conn().update_recent_search(qstring)
     query = (category, qstring)
     results = SearchResults.create_search_results(query)
     return results
