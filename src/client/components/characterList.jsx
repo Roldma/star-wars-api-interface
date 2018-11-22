@@ -123,7 +123,7 @@ class CharList extends Component {
         return (
           <div>
             There was an error obtaining information for this character
-            <img src="/img/404/star-wars404.jpg" alt="Character information Not found" />
+            <img src="/img/404/star-wars404" alt="Character information Not found" />
           </div>
         );
       }

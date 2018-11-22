@@ -29,7 +29,7 @@ class SearchPage extends Component {
       await this.setState({ searchString: queryStr, searchCategory: category });
 
       const { searchString, searchCategory } = this.state;
-      const urlSearchString = `http://localhost:6969/api/search/${searchCategory}/${searchString}`;
+      const urlSearchString = `http://localhost:6969/api/search/?string=${searchString}&category=${searchCategory}`;
       const searchResults = await axios.get(urlSearchString);
 
       this.setState({ searchString: '' });
@@ -41,16 +41,24 @@ class SearchPage extends Component {
 
   async getRecentSearch() {
     try {
+      const recentSearchURL = 'api/recent-search-list';
+      const recentSearchList = axios.get(`http://localhost:6969/${recentSearchURL}`);
+      console.log(recentSearchList);
+
+      this.setState(() => ({
+        recentSearchList,
+      }));
     } catch (error) {
       throw error;
     }
   }
 
   render() {
+    const { recentSearches } = this.state;
     return (
       <div>
         <SearchBar makeRequest={this.getResults} />
-        <RecentSearch />
+        <RecentSearch searchList={recentSearches} />
       </div>
     );
   }

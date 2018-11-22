@@ -12,7 +12,7 @@ class SearchResults:
        First element is the category, Second element is the user input string
     """
 
-    def __init__(self, query, results=400):
+    def __init__(self, query, results=404):
         self._query = query
         self.results = results
 
