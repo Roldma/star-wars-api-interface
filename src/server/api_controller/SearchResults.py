@@ -1,4 +1,4 @@
-"""SearchResults Instantiated which contains response from SWAPI (in member results)"""
+"""SearchResults contains response from SWAPI (in member results)"""
 
 import requests
 from flask import jsonify
@@ -12,7 +12,7 @@ class SearchResults:
        First element is the category, Second element is the user input string
     """
 
-    def __init__(self, query, results=400):
+    def __init__(self, query, results=404):
         self._query = query
         self.results = results
 
@@ -35,7 +35,7 @@ class SearchResults:
         self._results = value
 
     def __repr__(self):
-        return "{} Results return from SWAPI".format(self.results)
+        return "{} Response from SWAPI".format(self.results)
 
 
 def create_search_results(query):

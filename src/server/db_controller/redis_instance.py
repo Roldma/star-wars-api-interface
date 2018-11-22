@@ -1,7 +1,5 @@
 import redis
 
-# db = redis.Redis(host="localhost", port=6379, db=0)
-
 redis_pool = None
 
 
@@ -12,10 +10,16 @@ def initConn():
 
 class RedisConnection:
     def __init__(self):
-        self.redis_conn = redis.Redis(connection_pool=redis_pool)
+        self._redis_conn = redis.Redis(connection_pool=redis_pool)
 
     def update_recent_search(self, search_str):
-        self.redis_conn.sadd("recent:search", search_str)
+        self._redis_conn.sadd("recent:search", search_str)
+
+    def get_recent_search(self):
+        rec_search = self._redis_conn.get("recent:search")
+        print("RECENT SEARCH returned by REDIS", rec_search)
+        return rec_search
+        pass
 
 
 def redis_conn():
