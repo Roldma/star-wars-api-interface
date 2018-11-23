@@ -37,7 +37,7 @@ def img404():
 @app.route("/api/search/")
 def search():
     """
-    Request Arguments
+    Request Arguments (request.args)
     ----------
     category: string
     string: string 

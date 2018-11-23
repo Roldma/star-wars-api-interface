@@ -30,13 +30,16 @@ class CharList extends Component {
 
   /**
    * Get Initial character list
-   * */
+   *
+   */
   async getInitialCharList() {
     try {
       const charUrl = 'http://localhost:6969/characters';
       const response = await axios.get(charUrl);
+
       this.setState(() => {
         const updatedCharObj = {};
+
         response.data.characters.forEach((char) => {
           const { url } = char;
           updatedCharObj[char.name] = { url };
@@ -51,32 +54,30 @@ class CharList extends Component {
   /**
    *
    * @param {string} url - used for making request
-   * Invoked when person clicks a character, triggers state update, then triggers react lifecyle
-   * component did update.
    */
   async getCharInfo(url) {
     try {
       const charResults = await axios.get(url);
-      console.log(charResults);
+
       if (!this.isCancelled) {
         this.setState((currState) => {
           const stateCopy = currState;
           const { chars } = stateCopy;
           const { data } = charResults;
 
-          const validInfoObj = {};
+          const validInfo = {};
           Object.entries(data).forEach(([key, val]) => {
             if (!/[^A-z0-9]/.test(val) && !Array.isArray(val)) {
-              validInfoObj[key] = val;
+              validInfo[key] = val;
             }
           });
 
           if (chars[data.name]) {
-            chars[data.name].info = validInfoObj;
+            chars[data.name].info = validInfo;
             chars[data.name].info.films = data.films;
             stateCopy.selectedChar = data.name;
           } else {
-            chars[data.name] = { info: validInfoObj };
+            chars[data.name] = { info: validInfo };
             stateCopy.selectedChar = charResults.data.name;
           }
 
