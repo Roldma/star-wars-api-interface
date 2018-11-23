@@ -9,7 +9,7 @@ class SearchResults:
     Parameters
     ----------
     query: tuple 
-       First element is the category, Second element is the user input string
+       query[0] = category, query[1] = user input string
     """
 
     def __init__(self, query, results=404):
