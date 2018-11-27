@@ -5,7 +5,7 @@ redis_pool = None
 
 def initConn():
     global redis_pool
-    redis_pool = redis.ConnectionPool(host="localhost", port=6379, db=0)
+    redis_pool = redis.ConnectionPool(host="localhost", port=6969, db=0)
 
 
 class RedisConnection:
@@ -19,7 +19,6 @@ class RedisConnection:
         rec_search = self._redis_conn.get("recent:search")
         print("RECENT SEARCH returned by REDIS", rec_search)
         return rec_search
-        pass
 
 
 def redis_conn():
