@@ -36,6 +36,41 @@ class SearchBar extends Component {
   }
 
   render() {
+    const categories = ['People', 'Planets', 'Species', 'Starships', 'Vehicles'];
+    let uniqueId = 0;
+    const catButtons = categories.map((category) => {
+      uniqueId += 1;
+      if (category === 'People') {
+        return (
+          <span key={`catSpanButt${uniqueId}`}>
+            <input
+              key={`catBut${uniqueId}`}
+              type="radio"
+              value={category}
+              id={category}
+              name="categorySelect"
+              onChange={this.updateCategory}
+              defaultChecked
+            />
+            <label htmlFor={category}>{category}</label>
+          </span>
+        );
+      }
+      return (
+        <span key={`catSpanButt${uniqueId}`}>
+          <input
+            key={`catBut${uniqueId}`}
+            type="radio"
+            id={category}
+            value={category}
+            name="categorySelect"
+            onChange={this.updateCategory}
+          />
+          {' '}
+          <label htmlFor={category}>{category}</label>
+        </span>
+      );
+    });
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -47,46 +82,8 @@ class SearchBar extends Component {
               onChange={this.textFill}
               value={this.state.inputValue}
             />
-            <div className="category_buttons">
-              <input
-                type="radio"
-                value="people"
-                name="categorySelect"
-                onChange={this.updateCategory}
-                defaultChecked
-              />
-              People
-              <input
-                type="radio"
-                value="planets"
-                name="categorySelect"
-                onChange={this.updateCategory}
-              />
-              Planets
-              <input
-                type="radio"
-                value="species"
-                name="categorySelect"
-                onChange={this.updateCategory}
-              />
-              Species
-              <input
-                type="radio"
-                value="starships"
-                name="categorySelect"
-                onChange={this.updateCategory}
-              />
-              Starships
-              <input
-                type="radio"
-                value="vehicles"
-                name="categorySelect"
-                onChange={this.updateCategory}
-              />
-              Vehicles
-            </div>
+            <div>{catButtons}</div>
           </fieldset>
-          <div />
         </form>
       </div>
     );
