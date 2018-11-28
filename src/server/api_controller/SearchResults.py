@@ -12,7 +12,7 @@ class SearchResults:
        query[0] = category, query[1] = user input string
     """
 
-    def __init__(self, query, results=404):
+    def __init__(self, query, results=None):
         self._query = query
         self.results = results
 
@@ -23,9 +23,10 @@ class SearchResults:
     @results.setter
     def results(self, value):
         def get_request(query):
-            swapi_search_url = "https://swapi.co/api/{}/?search={}".format(
-                query[0], query[1]
-            )
+
+            request_url = "https://swapi.co/api/{}/?search={}"
+            swapi_search_url = request_url.format(query[0], query[1])
+
             response_data = requests.get(swapi_search_url)
             jsoned_response = jsonify(response_data.json())
 
