@@ -1,4 +1,7 @@
-"""SearchResults contains response from SWAPI (in member results)"""
+"""
+SearchResponse : class used to set/get search results
+create_search_results(arg:string) : function to return search results member of SearchResponse
+"""
 
 import requests
 from flask import jsonify
@@ -6,15 +9,16 @@ from flask import jsonify
 
 class SearchResponse:
     """
+    Class used to create a search response from the official star wars API
+    
     Parameters
     ----------
     query: tuple 
-       query[0] = category, query[1] = user input string
+        query[0] = category, query[1] = user input string
     """
 
-    def __init__(self, query, results=None):
+    def __init__(self, query):
         self._query = query
-        self.results = results
 
     @property
     def results(self):
