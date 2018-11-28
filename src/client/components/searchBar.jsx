@@ -71,6 +71,7 @@ class SearchBar extends Component {
         </span>
       );
     });
+
     return (
       <div>
         <form onSubmit={this.handleSubmit}>

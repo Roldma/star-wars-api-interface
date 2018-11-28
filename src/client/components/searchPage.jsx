@@ -26,7 +26,7 @@ class SearchPage extends Component {
   /**
    *
    * @param {string} queryStr - String passed in from text input search bar
-   *
+   * @param {string} category - String passed in from radio button selected
    */
   async getResults(queryStr, category) {
     try {
@@ -69,7 +69,7 @@ class SearchPage extends Component {
       <div>
         <SearchBar makeRequest={this.getResults} />
         <p className="recent_search_list"> Recent Searches made </p>
-        {recentSearchList.length ? recentSearch : 'NONE'}
+        {recentSearchList.length ? recentSearch : 'Lets get searching!'}
       </div>
     );
   }
