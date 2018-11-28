@@ -19,7 +19,7 @@ def bundle():
     return app.send_static_file("bundle.js")
 
 
-@app.route("/scripts/bundle.js")
+@app.route("/scripts/bundle.js.map")
 def bundle_map():
     return app.send_static_file("bundle.js.map")
 
@@ -37,7 +37,7 @@ def img404():
 @app.route("/api/search/")
 def search():
     """
-    Request Arguments
+    Request Arguments (request.args)
     ----------
     category: string
     string: string 
@@ -50,16 +50,17 @@ def search():
     redis_connection = redis_instance.redis_conn()
     redis_connection.update_recent_search(input_string)
 
-    query = (input_string, category)
+    query = (category, input_string)
     results = SearchResults.create_search_results(query)
     return results
 
 
-@app.route("/api/recent-search-list")
+@app.route("/api/recent-search-list", methods=["POST", "GET"])
 def recent_search_list():
-    conn = redis_instance.redis_conn()
-    print(conn.get_recent_search())
-    pass
+    dbconn = redis_instance.redis_conn()
+    recent_search_list = dbconn.recent_search_list
+    print(recent_search_list, "the search list")
+    return recent_search_list
 
 
 ### COMMANd flask run -h localhost -p 6969

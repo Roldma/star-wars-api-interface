@@ -10,6 +10,7 @@ flask = "*"
 marshmallow = "*"
 requests = "*"
 redis = "*"
+hiredis = "*"
 
 [requires]
 python_version = "3.6"
