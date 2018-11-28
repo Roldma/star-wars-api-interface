@@ -55,7 +55,7 @@ def search():
     return results
 
 
-@app.route("/api/recent-search-list")
+@app.route("/api/recent-search-list", methods=["POST", "GET"])
 def recent_search_list():
     dbconn = redis_instance.redis_conn()
     recent_search_list = dbconn.recent_search_list
