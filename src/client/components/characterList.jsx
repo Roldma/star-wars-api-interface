@@ -34,7 +34,7 @@ class CharList extends Component {
    */
   async getInitialCharList() {
     try {
-      const charUrl = 'http://localhost:6969/characters';
+      const charUrl = 'http://localhost:6868/characters';
       const response = await axios.get(charUrl);
 
       this.setState(() => {
