@@ -30,13 +30,13 @@ class SearchPage extends Component {
    */
   async getResults(queryStr, category) {
     try {
-      await this.setState({ searchString: queryStr, searchCategory: category });
+      this.setState({ searchString: queryStr, searchCategory: category });
 
       const { searchString, searchCategory } = this.state;
       const urlSearchString = `http://localhost:6868/api/search/?string=${searchString}&category=${searchCategory}`;
       const searchResults = await axios.get(urlSearchString);
 
-      this.setState({ searchString: '' });
+      this.setState({ searchString: '' }); // clear search bar
       console.log('search RESULT', searchResults);
     } catch (err) {
       throw err;
@@ -54,8 +54,6 @@ class SearchPage extends Component {
         const { data } = recentSearchList;
         return { recentSearchList: data };
       });
-
-      console.log('*** STate recentsearchlist', this.state.recentSearchList);
     } catch (error) {
       throw error;
     }

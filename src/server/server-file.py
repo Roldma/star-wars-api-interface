@@ -3,8 +3,8 @@ import db_controller
 
 from flask import Flask, render_template, request
 
-from db_controller import redis_instance
-from api_controller import SearchResults
+from dbcontroller import redis_instance
+from api import search_response
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
 
@@ -51,7 +51,7 @@ def search():
     redis_connection.update_recent_search(input_string)
 
     query = (category, input_string)
-    results = SearchResults.create_search_results(query)
+    results = search_response.create_search_results(query)
     return results
 
 

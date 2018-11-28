@@ -4,7 +4,7 @@ import requests
 from flask import jsonify
 
 
-class SearchResults:
+class SearchResponse:
     """
     Parameters
     ----------
@@ -40,5 +40,5 @@ class SearchResults:
 
 
 def create_search_results(query):
-    search_results = SearchResults(query)
+    search_results = SearchResponse(query)
     return search_results.results

@@ -24,21 +24,15 @@ class RedisConnection:
         r_set_members = self._redis_conn.smembers(r_set_name)
 
         search_list = [
-            self.decoder(member)
+            self._decoder(member)
             for member in r_set_members
-            if len(self.decoder(member)) > 0
+            if len(self._decoder(member)) > 0
         ]
 
-        print(search_list)
         value = jsonify(search_list)
         self._recent_search_list = value
 
-    def update_recent_search(self, search_str):
-        self._redis_conn.sadd("recent:search", search_str)
-        self._redis_conn.set("success", "true")
-        print("member added to set")
-
-    def decoder(self, item):
+    def _decoder(self, item):
         return item.decode("utf-8")
 
 
