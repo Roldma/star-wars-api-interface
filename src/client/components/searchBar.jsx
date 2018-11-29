@@ -42,6 +42,10 @@ class SearchBar extends Component {
     this.setState({ category: e.target.value });
   }
 
+  validateString(str) {
+    const validChars = new RegExp();
+  }
+
   render() {
     const categories = ['People', 'Planets', 'Species', 'Starships', 'Vehicles'];
     let uniqueId = 0;
@@ -86,6 +90,7 @@ class SearchBar extends Component {
             <input
               className="inputBars"
               type="text"
+              maxLength="15"
               id="search_text_input"
               onChange={this.textFill}
               value={this.state.inputValue}
