@@ -1,5 +1,5 @@
-import api_controller
-import db_controller
+import api
+import dbcontroller
 
 from flask import Flask, render_template, request
 
@@ -43,11 +43,11 @@ def search():
     ----------
     category: string
         category to use in request to SWAPI
-    input_str: string 
+    querystr: string 
         search term to request to SWAPI
     """
 
-    query = (request.args["category"], request.args["input_str"])
+    query = (request.args["category"], request.args["querystr"])
     results = search_response.create_search_results(query)
     return results
 
@@ -56,9 +56,13 @@ def search():
 def recent_search_list():
     if request.method == "GET":
         return recent_search.get_recent()
+
     elif request.method == "POST":
-        query = request.args["query"]
-        return recent_search.update_recent(query)
+        json_data = request.get_json()
+        query = json_data["queryStr"]
+
+        recent_search.update_recent(query)
+        return "Recent Search List updated"
 
 
 ### COMMANd flask run -h localhost -p 6969
