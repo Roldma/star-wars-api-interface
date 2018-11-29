@@ -46,5 +46,4 @@ class SearchResponse:
 
 def create_search_results(query):
     search_results = SearchResponse(query)
-    print(search_results.results, "RESULTSS")
     return search_results.results
