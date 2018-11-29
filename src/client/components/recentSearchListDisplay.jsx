@@ -1,20 +1,16 @@
 import React from 'react';
 
-const RecentSearchList = (props) => {
-  const { searchList } = props;
-  console.log(searchList);
+const RecentSearchListDisplay = (props) => {
+  const { recentSearchList } = props;
+
   let uniqueId = 0;
 
-  const recentList = searchList.map((str) => {
+  const recentList = recentSearchList.map((str) => {
     uniqueId += 1;
     return <li key={`rSearch${uniqueId}`}>{str}</li>;
   });
 
-  return (
-    <div>
-      <ul>{recentList}</ul>
-    </div>
-  );
+  return <div>{<ul>{recentList}</ul>}</div>;
 };
 
-export default RecentSearchList;
+export default RecentSearchListDisplay;
