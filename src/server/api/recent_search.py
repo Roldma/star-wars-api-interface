@@ -21,10 +21,11 @@ class RecentSearch:
         search query string from user input
     """
 
-    def __init__(self, rconn, query=None):
+    def __init__(self, rconn, query=None, recent_searches=None):
         self._query = query
         self._rconn = rconn
         self._rset_key = "recent:search"
+        self.recent_searches = recent_searches
 
     @property
     def recent_searches(self):
@@ -37,8 +38,9 @@ class RecentSearch:
         search_list = [
             self._decoder(member) for member in rset if len(self._decoder(member)) > 0
         ]
-
+        print("SEARCH LIST", search_list)
         value = jsonify(search_list)
+        print("VALUE IN Recent_searches setter", value)
         self._recent_searches = value
 
     def update_recent_searches(self):
@@ -56,7 +58,8 @@ def _rconn():
 
 def get_recent():
     """Retrieves recent search list from redis db"""
-    return RecentSearch(_rconn()).recent_searches
+    recent_list = RecentSearch(_rconn()).recent_searches
+    return recent_list
 
 
 def update_recent(query):
@@ -68,5 +71,4 @@ def update_recent(query):
     query: string
         string from user input search
     """
-
     RecentSearch(_rconn(), query).update_recent_searches()
