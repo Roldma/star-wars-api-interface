@@ -17,8 +17,9 @@ class SearchResponse:
         query[0] = category, query[1] = user input string
     """
 
-    def __init__(self, query):
+    def __init__(self, query, results=None):
         self._query = query
+        self.results = results
 
     @property
     def results(self):
@@ -45,4 +46,5 @@ class SearchResponse:
 
 def create_search_results(query):
     search_results = SearchResponse(query)
+    print(search_results.results, "RESULTSS")
     return search_results.results
