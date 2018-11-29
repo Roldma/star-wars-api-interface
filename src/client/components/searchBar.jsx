@@ -22,9 +22,16 @@ class SearchBar extends Component {
 
   handleSubmit(e) {
     const { inputValue, category } = this.state;
-    const { makeRequest } = this.props;
+    const {
+      getResults, updateRecentSearch, recentSearchList, getRecentSearch,
+    } = this.props;
 
-    makeRequest(inputValue, category);
+    getResults(inputValue, category);
+
+    if (!recentSearchList.length || !recentSearchList.includes(inputValue)) {
+      updateRecentSearch(inputValue);
+      getRecentSearch();
+    }
 
     this.setState({ inputValue: '' }); // clear search bar
 
