@@ -1,10 +1,10 @@
-import api_controller
-import db_controller
+import api
+import dbcontroller
 
 from flask import Flask, render_template, request
 
-from db_controller import redis_instance
-from api_controller import SearchResults
+from dbcontroller import redis_instance
+from api import search_response, recent_search
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
 
@@ -37,30 +37,32 @@ def img404():
 @app.route("/api/search/")
 def search():
     """
+    Makes request to official star wars API for searching
+    
     Request Arguments (request.args)
     ----------
     category: string
-    string: string 
+        category to use in request to SWAPI
+    querystr: string 
+        search term to request to SWAPI
     """
 
-    input_string = request.args["string"]
-    category = request.args["category"]
-    print(input_string, category, "((((AS*D(AS*(D*")
-
-    redis_connection = redis_instance.redis_conn()
-    redis_connection.update_recent_search(input_string)
-
-    query = (category, input_string)
-    results = SearchResults.create_search_results(query)
+    query = (request.args["category"], request.args["querystr"])
+    results = search_response.create_search_results(query)
     return results
 
 
 @app.route("/api/recent-search-list", methods=["POST", "GET"])
 def recent_search_list():
-    dbconn = redis_instance.redis_conn()
-    recent_search_list = dbconn.recent_search_list
-    print(recent_search_list, "the search list")
-    return recent_search_list
+    if request.method == "GET":
+        return recent_search.get_recent()
+
+    elif request.method == "POST":
+        json_data = request.get_json()
+        query = json_data["queryStr"]
+
+        recent_search.update_recent(query)
+        return "Recent Search List updated"
 
 
 ### COMMANd flask run -h localhost -p 6969
