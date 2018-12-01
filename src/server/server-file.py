@@ -43,11 +43,11 @@ def search():
     ----------
     category: string
         category to use in request to SWAPI
-    querystr: string 
+    input: string 
         search term to request to SWAPI
     """
 
-    query = (request.args["category"], request.args["querystr"])
+    query = (request.args["category"], request.args["input"])
     results = search_response.create_search_results(query)
     return results
 

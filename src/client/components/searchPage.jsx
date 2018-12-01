@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from '../../resources/axiosconf';
 
 import SearchBar from './searchBar.jsx';
 import RecentSearchListDisplay from './recentSearchListDisplay.jsx';
@@ -13,6 +13,10 @@ class SearchPage extends Component {
     this.state = {
       recentSearchList: [],
       searchResults: {},
+      currQuery: {
+        input: '',
+        category: '',
+      },
     };
     this.getResults = this.getResults.bind(this);
     this.getRecentSearch = this.getRecentSearch.bind(this);
@@ -30,17 +34,27 @@ class SearchPage extends Component {
    * @param {string} queryStr - String passed in from text input search bar
    * @param {string} category - String passed in from radio button selected
    */
-  async getResults(queryStr, category) {
+  async getResults(input, category) {
     try {
       const searchApi = 'api/search/';
+      const currQuery = {
+        input,
+        category,
+      };
+      await this.setState({ currQuery });
 
-      const urlSearchString = `${
-        this.localHost
-      }${searchApi}?category=${category}&querystr=${queryStr}`;
+      // const urlSearchString = `${
+      //   this.localHost
+      // }${searchApi}?category=${category}&querystr=${queryStr}`;
 
-      const searchResults = await axios.get(urlSearchString);
-
-      console.log('search RESULT', searchResults);
+      const response = await axios.get(searchApi, {
+        params: currQuery,
+      });
+      console.log(response);
+      const { results } = response.data;
+      this.setState({ searchResults: results });
+      console.log('search RESULT', this.state.searchResults);
+      console.log(' THE STATE', this.state.currQuery);
     } catch (err) {
       return err;
     }
