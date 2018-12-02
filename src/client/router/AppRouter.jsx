@@ -9,9 +9,9 @@ const AppRouter = props => (
   <BrowserRouter>
     <div className="App">
       <Switch>
-        <Route exact path="/" render={() => <Landing {...props} />} />
-        <Route exact path="/charList" render={() => <CharList {...props} />} />
-        <Route exact path="/searchSwapi" render={() => <SearchPage {...props} />} />
+        <Route exact path="/" component={Landing} />
+        <Route exact path="/charList" component={CharList} />
+        <Route exact path="/searchSwapi" component={SearchPage} />
       </Switch>
     </div>
   </BrowserRouter>
