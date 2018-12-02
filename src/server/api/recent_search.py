@@ -38,14 +38,13 @@ class RecentSearch:
         search_list = [
             self._decoder(member) for member in rset if len(self._decoder(member)) > 0
         ]
-        print("SEARCH LIST", search_list)
+        print("Recent SEARCH LIST", search_list)
         value = jsonify(search_list)
-        print("VALUE IN Recent_searches setter", value)
         self._recent_searches = value
 
     def update_recent_searches(self):
         self._rconn.sadd(self._rset_key, self._query)
-        print("Query added to set")
+        print("Query added to set", self._query)
 
     def _decoder(self, item):
         return item.decode("utf-8")

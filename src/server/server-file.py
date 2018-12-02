@@ -43,11 +43,11 @@ def search():
     ----------
     category: string
         category to use in request to SWAPI
-    querystr: string 
+    input: string 
         search term to request to SWAPI
     """
 
-    query = (request.args["category"], request.args["querystr"])
+    query = (request.args["category"], request.args["input"])
     results = search_response.create_search_results(query)
     return results
 
@@ -59,7 +59,7 @@ def recent_search_list():
 
     elif request.method == "POST":
         json_data = request.get_json()
-        query = json_data["queryStr"]
+        query = json_data["input"]
 
         recent_search.update_recent(query)
         return "Recent Search List updated"

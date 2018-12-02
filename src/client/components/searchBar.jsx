@@ -7,9 +7,12 @@ class SearchBar extends Component {
       inputValue: '',
       category: '',
     };
+
+    this.stringValid = false;
     this.textFill = this.textFill.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateCategory = this.updateCategory.bind(this);
+    this.validateString = this.validateString.bind(this);
   }
 
   componentDidMount() {
@@ -22,20 +25,30 @@ class SearchBar extends Component {
 
   handleSubmit(e) {
     const { inputValue, category } = this.state;
-    const {
-      getResults, updateRecentSearch, recentSearchList, getRecentSearch,
-    } = this.props;
+    const { getResults, updateRecentSearch, recentSearchList } = this.props;
 
-    getResults(inputValue, category);
+    this.validateString(inputValue);
 
-    if (!recentSearchList.length || !recentSearchList.includes(inputValue)) {
-      updateRecentSearch(inputValue);
-      getRecentSearch();
+    if (this.stringValid) {
+      getResults(inputValue, category);
+      if (!recentSearchList.length || !recentSearchList.includes(inputValue)) {
+        updateRecentSearch(inputValue);
+      }
     }
 
     this.setState({ inputValue: '' }); // clear search bar
-
+    this.stringValid = false;
     e.preventDefault();
+  }
+
+  /**
+   * Sets this.stringValid property, checks for whitespace, alphabet, and digits. Everything else is invalid.
+   * @param {*} str - input string from searchBar
+   */
+  validateString(str) {
+    const validPatt = new RegExp(/[^\w|^\s]/, 'g');
+    if (validPatt.test(str)) this.stringValid = false;
+    else this.stringValid = true;
   }
 
   updateCategory(e) {
@@ -47,19 +60,22 @@ class SearchBar extends Component {
     let uniqueId = 0;
     const catButtons = categories.map((category) => {
       uniqueId += 1;
+      const validReqCategory = `${category[0].toLowerCase()}${category.slice(1)}`;
       if (category === 'People') {
         return (
           <span key={`catSpanButt${uniqueId}`}>
             <input
               key={`catBut${uniqueId}`}
               type="radio"
-              value={category}
+              value={validReqCategory}
               id={category}
               name="categorySelect"
               onChange={this.updateCategory}
               defaultChecked
             />
-            <label htmlFor={category}>{category}</label>
+            <label id={`${category.toLowerCase()}_radio`} htmlFor={validReqCategory}>
+              {category}
+            </label>
           </span>
         );
       }
@@ -69,12 +85,13 @@ class SearchBar extends Component {
             key={`catBut${uniqueId}`}
             type="radio"
             id={category}
-            value={category}
+            value={validReqCategory}
             name="categorySelect"
             onChange={this.updateCategory}
           />
-          {' '}
-          <label htmlFor={category}>{category}</label>
+          <label id={`${category.toLowerCase()}_radio`} htmlFor={category}>
+            {category}
+          </label>
         </span>
       );
     });
@@ -86,6 +103,7 @@ class SearchBar extends Component {
             <input
               className="inputBars"
               type="text"
+              maxLength="15"
               id="search_text_input"
               onChange={this.textFill}
               value={this.state.inputValue}
