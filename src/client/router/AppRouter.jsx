@@ -5,7 +5,7 @@ import Landing from '../components/landing.jsx';
 import CharList from '../components/characterList.jsx';
 import SearchPage from '../components/searchPage.jsx';
 
-const AppRouter = props => (
+const AppRouter = () => (
   <BrowserRouter>
     <div className="App">
       <Switch>
