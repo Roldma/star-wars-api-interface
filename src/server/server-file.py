@@ -59,7 +59,7 @@ def recent_search_list():
 
     elif request.method == "POST":
         json_data = request.get_json()
-        query = json_data["queryStr"]
+        query = json_data["input"]
 
         recent_search.update_recent(query)
         return "Recent Search List updated"
