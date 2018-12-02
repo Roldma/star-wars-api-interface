@@ -6,10 +6,8 @@ import RecentSearchListDisplay from './recentSearchListDisplay.jsx';
 import ErrorBoundary from './ErrorBoundary.jsx';
 
 class SearchPage extends Component {
-  constructor(props) {
+  constructor() {
     super();
-    this.localHost = props.localhost;
-    this.recentSearchUrl = 'api/recent-search-list';
     this.state = {
       recentSearchList: [],
       searchResults: {},
@@ -18,6 +16,13 @@ class SearchPage extends Component {
         category: '',
       },
     };
+
+    this.recentSearchApi = 'api/recent-search-list';
+    this.searchApi = 'api/search/';
+
+    this.isCancelled = false;
+    this.recentListUpdated = false;
+
     this.getResults = this.getResults.bind(this);
     this.getRecentSearch = this.getRecentSearch.bind(this);
     this.updateRecentSearch = this.updateRecentSearch.bind(this);
@@ -27,34 +32,36 @@ class SearchPage extends Component {
     this.getRecentSearch();
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate() {
+    if (this.recentListUpdated && !this.isCancelled) {
+      this.getRecentSearch();
+    }
+  }
+
+  componentWillUnmount() {
+    this.isCancelled = true;
+  }
 
   /**
-   * Function to make request to server/api, updates state with server response
+   * Make request to server/api, updates state with server response
    * @param {string} queryStr - String passed in from text input search bar
    * @param {string} category - String passed in from radio button selected
    */
   async getResults(input, category) {
     try {
-      const searchApi = 'api/search/';
       const currQuery = {
         input,
         category,
       };
       await this.setState({ currQuery });
 
-      // const urlSearchString = `${
-      //   this.localHost
-      // }${searchApi}?category=${category}&querystr=${queryStr}`;
-
-      const response = await axios.get(searchApi, {
+      const response = await axios.get(this.searchApi, {
         params: currQuery,
       });
-      console.log(response);
-      const { results } = response.data;
+      console.log('searchResuts response', response);
+      const [results] = response.data.results;
       this.setState({ searchResults: results });
       console.log('search RESULT', this.state.searchResults);
-      console.log(' THE STATE', this.state.currQuery);
     } catch (err) {
       return err;
     }
@@ -65,11 +72,17 @@ class SearchPage extends Component {
    */
   async getRecentSearch() {
     try {
-      const url = `${this.localHost}${this.recentSearchUrl}`;
-      const requestedList = await axios.get(url);
-
+      const requestedList = await axios.get(this.recentSearchApi);
       const { data } = requestedList;
-      await this.setState({ recentSearchList: data });
+
+      this.setState((state) => {
+        const { recentSearchList } = state;
+        const updatedList = data.filter(char => !recentSearchList.includes(char));
+
+        return { recentSearchList: recentSearchList.concat(updatedList) };
+      });
+
+      this.recentListUpdated = false;
     } catch (error) {
       return error;
     }
@@ -81,19 +94,17 @@ class SearchPage extends Component {
    */
   async updateRecentSearch(queryStr) {
     try {
-      await axios({
-        method: 'post',
-        url: `${this.localHost}${this.recentSearchUrl}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+      await this.setState({
+        currQuery: {
+          input: queryStr,
         },
-        data: { queryStr },
       });
 
-      const updatedRecent = axios.get(`${this.localHost}${this.recentSearchUrl}`);
+      await axios.post(this.recentSearchApi, {
+        input: this.state.currQuery.input,
+      });
 
-      return this.setState({ recentSearchList: updatedRecent });
+      this.recentListUpdated = true;
     } catch (error) {
       return error;
     }
@@ -101,7 +112,7 @@ class SearchPage extends Component {
 
   render() {
     const { recentSearchList } = this.state;
-    const recentSearch = <RecentSearchListDisplay recentSearchList={recentSearchList} />;
+    const recentSearchComp = <RecentSearchListDisplay recentSearchList={recentSearchList} />;
 
     return (
       <div>
@@ -112,7 +123,9 @@ class SearchPage extends Component {
           recentSearchList={recentSearchList}
         />
         <p className="recent_search_list"> Recent Searches made </p>
-        <ErrorBoundary>{recentSearch}</ErrorBoundary>
+        <ErrorBoundary>
+          {recentSearchList.length ? recentSearchComp : 'No recent Searches'}
+        </ErrorBoundary>
       </div>
     );
   }
