@@ -1,7 +1,8 @@
 """
-RecentSearch : Class used for creating recent search list, and updating
-get_recent() : function returning a recent search list from redis db (instantiated from RecentSearch)
+RecentSearchControl : Class used for creating recent search list, and updating
+get_recent() : function returning a recent search list from redis db (instantiated from RecentSearchControl)
 update_recent(arg:string) : function updating recent search list in redis db
+clear_recent() : function deleting recent searches key in redis DB
 """
 
 import dbcontroller
@@ -9,7 +10,7 @@ from dbcontroller import redis_instance
 from flask import jsonify
 
 
-class RecentSearch:
+class RecentSearchControl:
     """
     Class used to create recent search list, and update recent search list
     
@@ -46,6 +47,11 @@ class RecentSearch:
         self._rconn.sadd(self._rset_key, self._query)
         print("Query added to set", self._query)
 
+    def clear_recent_searches(self):
+        self._rconn.delete(self._rset_key)
+        print("Successfully deleted Key")
+        pass
+
     def _decoder(self, item):
         return item.decode("utf-8")
 
@@ -55,9 +61,13 @@ def _rconn():
     return redis_instance.create_rconn()
 
 
+def create_controller():
+    return RecentSearchControl(_rconn())
+
+
 def get_recent():
     """Retrieves recent search list from redis db"""
-    recent_list = RecentSearch(_rconn()).recent_searches
+    recent_list = create_controller().recent_searches
     return recent_list
 
 
@@ -70,4 +80,8 @@ def update_recent(query):
     query: string
         string from user input search
     """
-    RecentSearch(_rconn(), query).update_recent_searches()
+    return create_controller().update_recent_searches()
+
+
+def clear_recent():
+    return create_controller().clear_recent_searches()

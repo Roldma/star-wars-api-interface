@@ -1,0 +1,135 @@
+swagger: "2.0"
+info:
+  description: >-
+    Star wars interface server
+
+  version: 1.0.0
+  title: Star Wars Interface
+  termsOfService: "[WIP]"
+  contact:
+    email: "test@email.com"
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: localhost:6868
+basePath: /
+tags:
+  - name: search
+    description: Search results
+  - name: recent
+    description: Get various 'recent' items
+  - name: bookmarks
+    description: Your favorite star wars items
+  - name: user
+    description: Operations about user
+
+schemes:
+  - https
+  - http
+paths:
+  /search:
+    get:
+      tags:
+        - search
+      summary: Get search results
+      description: Returns an object containing results from official Swapi
+      operationId: getResults
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: category
+          in: query
+          example: "people"
+          description: Category used for making official request to SWAPI, must be lowercase
+          required: true
+          type: string
+          schema:
+            $ref: "#/definitions/Pet"
+        - name: input
+          in: query
+          example: luke skywalker
+          description: Input String used for making official request to SWAPI
+          required: true
+          type: string
+          schema:
+            $ref: "#/definitions/Pet"
+      responses:
+        "405":
+          description: Invalid input
+        "200":
+          description: Obj containing search results
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              results:
+                type: array
+  /recent/{type}:
+    get:
+      tags:
+        - recent
+      summary: Get various recent items eg. search terms or cached results
+      description: Returns a list of 'recent' items
+      operationId: getRecent
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          example: "/recent/search-terms or /recent/search-results"
+          description: "Returns recent search terms, or Recent search results"
+          required: true
+          type: string
+        - name: name
+          in: query
+          exmaple: 'Luke Skywalker'
+          description: "Returns cached results of particular name"
+          required: true
+          type: string
+      responses:
+        "405":
+          description: Invalid input
+        "200":
+          description: Obj containing list of recent type
+          schema:
+            type: object
+            items:
+              required:
+                - data
+            properties:
+              data:
+                type: array
+    post:
+      tags:
+        - recent
+      summary: Update lists of recent items
+      description: Updates lists of recent items in the database
+      operationId: postRecent
+      parameters:
+        - name: input
+          type: string
+          in: body
+          required: true
+          example: Luke Skywalker
+          description: Input string to update search terms or key used for caching certain results
+        - name: recentData
+          type: object
+          in: body
+          example: {
+            "name": "Luke Skywalker",
+            "height": "172",
+            "mass": "77",
+          }
+          description: Object containing relevant search results to cache
+      responses:
+        "405":
+          description: Invalid input
+        "200":
+          description: Obj containing list of recent type
+        

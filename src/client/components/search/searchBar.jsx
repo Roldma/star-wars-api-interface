@@ -25,12 +25,12 @@ class SearchBar extends Component {
 
   handleSubmit(e) {
     const { inputValue, category } = this.state;
-    const { getResults, updateRecentSearch, recentSearchList } = this.props;
+    const { getSearchResults, updateRecentSearch, recentSearchList } = this.props;
 
     this.validateString(inputValue);
 
     if (this.stringValid) {
-      getResults(inputValue, category);
+      getSearchResults(inputValue, category);
       if (!recentSearchList.length || !recentSearchList.includes(inputValue)) {
         updateRecentSearch(inputValue);
       }
@@ -58,7 +58,8 @@ class SearchBar extends Component {
   render() {
     const categories = ['People', 'Planets', 'Species', 'Starships', 'Vehicles'];
     let uniqueId = 0;
-    const catButtons = categories.map((category) => {
+
+    const categoryButtons = categories.map((category) => {
       uniqueId += 1;
       const validReqCategory = `${category[0].toLowerCase()}${category.slice(1)}`;
       if (category === 'People') {
@@ -79,6 +80,7 @@ class SearchBar extends Component {
           </span>
         );
       }
+
       return (
         <span key={`catSpanButt${uniqueId}`}>
           <input
@@ -108,7 +110,7 @@ class SearchBar extends Component {
               onChange={this.textFill}
               value={this.state.inputValue}
             />
-            <div>{catButtons}</div>
+            <div>{categoryButtons}</div>
           </fieldset>
         </form>
       </div>
