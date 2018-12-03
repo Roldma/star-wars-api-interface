@@ -132,12 +132,4 @@ paths:
           description: Invalid input
         "200":
           description: Obj containing list of recent type
-          schema:
-            type: object
-            items:
-              required:
-                - data
-            properties:
-              data:
-                type: array
         
