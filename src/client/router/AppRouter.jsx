@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Landing from '../components/landing.jsx';
 import CharList from '../components/characterList.jsx';
-import SearchPage from '../components/searchPage.jsx';
+import SearchPage from '../components/search/searchPage.jsx';
 
 const AppRouter = () => (
   <BrowserRouter>
