@@ -14,17 +14,15 @@ def index_file():
     return render_template("index.html")
 
 
-@app.route("/scripts/bundle.js")
-def bundle():
-    return app.send_static_file("bundle.js")
+@app.route("/scripts/<jsfile>")
+def script_file(jsfile):
+    if jsfile == "bundle.js":
+        return app.send_static_file("bundle.js")
+    elif jsfile == "bundle.js.map":
+        return app.send_static_file("bundle.js.map")
 
 
-@app.route("/scripts/bundle.js.map")
-def bundle_map():
-    return app.send_static_file("bundle.js.map")
-
-
-@app.route("/characters")
+@app.route("/characters/")
 def characters():
     return app.send_static_file("characters.json")
 
@@ -52,20 +50,25 @@ def search():
     return results
 
 
-@app.route("/api/recent-search-list", methods=["POST", "GET"])
-def recent_search_list():
-    if request.method == "GET":
-        return recent_search.get_recent()
+@app.route("/api/recent/<resource>/", methods=["POST", "GET", "DELETE"])
+def recent_search_list(resource):
+    if resource == "list":
+        if request.method == "GET":
+            return recent_search.get_recent()
 
-    elif request.method == "POST":
-        json_data = request.get_json()
-        query = json_data["input"]
+        elif request.method == "POST":
+            json_data = request.get_json()
+            query = json_data["input"]
 
-        recent_search.update_recent(query)
-        return "Recent Search List updated"
+            recent_search.update_recent(query)
+            return "Recent Search List updated"
+
+        elif request.method == "DELETE":
+            recent_search.clear_recent()
+            return "Recent Search list cleared"
 
 
-### COMMANd flask run -h localhost -p 6969
+### COMMANd flask run -h localhost -p 6868
 if __name__ == "main":
     app.run()
 
