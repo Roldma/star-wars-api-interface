@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../resources/axiosconf';
+import api from '../../resources/api/ApiEndpoints';
 
 import SearchBar from './searchBar.jsx';
 import RecentSearchListDisplay from './recentSearchListDisplay.jsx';
@@ -17,8 +18,8 @@ class SearchPage extends Component {
       },
     };
 
-    this.recentSearchApi = 'api/recent-search-list';
-    this.searchApi = 'api/search/';
+    this.recentListUrl = api.recent.list;
+    this.searchUrl = api.search;
 
     this.isCancelled = false;
     this.recentListUpdated = false;
@@ -54,8 +55,8 @@ class SearchPage extends Component {
         category,
       };
       await this.setState({ currQuery });
-
-      const response = await axios.get(this.searchApi, {
+      console.log(this.searchUrl);
+      const response = await axios.get(this.searchUrl, {
         params: currQuery,
       });
       console.log('searchResuts response', response);
@@ -72,7 +73,7 @@ class SearchPage extends Component {
    */
   async getRecentSearch() {
     try {
-      const requestedList = await axios.get(this.recentSearchApi);
+      const requestedList = await axios.get(this.recentListUrl);
       const { data } = requestedList;
 
       this.setState((state) => {
@@ -83,6 +84,8 @@ class SearchPage extends Component {
       });
 
       this.recentListUpdated = false;
+
+      return 'successful retrieval of Recent search list';
     } catch (error) {
       return error;
     }
@@ -100,11 +103,20 @@ class SearchPage extends Component {
         },
       });
 
-      await axios.post(this.recentSearchApi, {
+      await axios.post(this.recentListUrl, {
         input: this.state.currQuery.input,
       });
 
       this.recentListUpdated = true;
+      return 'Successful Update';
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async clearRecentSearch() {
+    try {
+      return axios.delete(this.recentListUrl);
     } catch (error) {
       return error;
     }
