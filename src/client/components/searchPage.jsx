@@ -23,7 +23,7 @@ class SearchPage extends Component {
     this.isCancelled = false;
     this.recentListUpdated = false;
 
-    this.getResults = this.getResults.bind(this);
+    this.getSearchResults = this.getSearchResults.bind(this);
     this.getRecentSearch = this.getRecentSearch.bind(this);
     this.updateRecentSearch = this.updateRecentSearch.bind(this);
   }
@@ -47,7 +47,7 @@ class SearchPage extends Component {
    * @param {string} queryStr - String passed in from text input search bar
    * @param {string} category - String passed in from radio button selected
    */
-  async getResults(input, category) {
+  async getSearchResults(input, category) {
     try {
       const currQuery = {
         input,
@@ -117,7 +117,7 @@ class SearchPage extends Component {
     return (
       <div>
         <SearchBar
-          getResults={this.getResults}
+          getSearchResults={this.getSearchResults}
           getRecentSearch={this.getRecentSearch}
           updateRecentSearch={this.updateRecentSearch}
           recentSearchList={recentSearchList}
