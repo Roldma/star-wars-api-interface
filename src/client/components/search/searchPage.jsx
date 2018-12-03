@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import axios from '../../resources/axiosconf';
-import api from '../../resources/api/ApiEndpoints';
+import axios from '../../../resources/axiosconf';
+import api from '../../../resources/api/ApiEndpoints';
 
 import SearchBar from './searchBar.jsx';
 import RecentSearchListDisplay from './recentSearchListDisplay.jsx';
-import ErrorBoundary from './ErrorBoundary.jsx';
+import ErrorBoundary from '../ErrorBoundary.jsx';
 
 class SearchPage extends Component {
   constructor() {
