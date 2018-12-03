@@ -20,7 +20,4 @@ const createList = item => Object.values(item);
 
 const listOfResourceNames = createList(resourceNames());
 
-// module.exports = {
-//   listOfResourceNames,
-// };
 export default listOfResourceNames;
