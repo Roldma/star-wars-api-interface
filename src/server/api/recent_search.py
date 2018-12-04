@@ -61,8 +61,13 @@ def _rconn():
     return redis_instance.create_rconn()
 
 
-def create_controller():
-    return RecentSearchControl(_rconn())
+def create_controller(query=None):
+    if query:
+        controller = RecentSearchControl(_rconn(), query)
+    elif not query:
+        controller = RecentSearchControl(_rconn())
+
+    return controller
 
 
 def get_recent():
@@ -80,7 +85,7 @@ def update_recent(query):
     query: string
         string from user input search
     """
-    return create_controller().update_recent_searches()
+    return create_controller(query).update_recent_searches()
 
 
 def clear_recent():
