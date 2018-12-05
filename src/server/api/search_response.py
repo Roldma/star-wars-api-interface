@@ -27,18 +27,20 @@ class SearchResponse:
 
     @results.setter
     def results(self, value):
-        def get_request(query):
+        if not value:
+            self._results = self._get_request(self._query)
+        else:
+            print("Results parameter should not be passed into constructor")
 
-            request_url = "https://swapi.co/api/{}/?search={}"
-            swapi_search_url = request_url.format(query[0], query[1])
+    def _get_request(self, query):
+        request_url = "https://swapi.co/api/{}/?search={}"
+        swapi_search_url = request_url.format(query[0], query[1])
 
-            response_data = requests.get(swapi_search_url)
-            jsoned_response = jsonify(response_data.json())
-
-            return jsoned_response
-
-        value = get_request(self._query)
-        self._results = value
+        response_data = requests.get(swapi_search_url)
+        jsoned_response = jsonify(response_data.json())
+        print(jsoned_response)
+        print("RESPONSE DATA", response_data)
+        return jsoned_response
 
     def __repr__(self):
         return "{} Response from SWAPI".format(self.results)
