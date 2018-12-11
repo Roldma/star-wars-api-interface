@@ -1,12 +1,15 @@
-import api
-import dbcontroller
+import sys
+import os
 
 from flask import Flask, render_template, request
+from api import recent_search
+from api.search_response import create_search_results
 
-from dbcontroller import redis_instance
-from api import search_response, recent_search
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
+
+print(sys.path)
+print(create_search_results)
 
 
 @app.route("/")
@@ -46,7 +49,7 @@ def search():
     """
 
     query = (request.args["category"], request.args["input"])
-    results = search_response.create_search_results(query)
+    results = create_search_results(query)
     return results
 
 

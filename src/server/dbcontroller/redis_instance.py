@@ -16,6 +16,6 @@ class RedisConnection:
 
 def create_rconn():
     initConn()
-    db = RedisConnection().redis_conn
-    return db
+    cache = RedisConnection().redis_conn
+    return cache
 

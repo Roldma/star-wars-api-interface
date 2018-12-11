@@ -19,19 +19,20 @@ class ApiEndpoints {
   }
 
   get endpoints() {
-    const newEndpoints = this.createEndpoints();
-    return newEndpoints;
+    return this._endpoints;
   }
 
   set endpoints(val) {
-    this._endpoints = val;
+    if (typeof val === 'object') {
+      this._endpoints = this.createEndpoints();
+    }
   }
 
   /**
    * Parses this.entityArr and creates an object containing endpoint urls (strings)
-   * Return: an Object key: resource names value: full endpoint urls (Strings) eg. 'http://localhost:6868/api/search'
+   * Returns an Object key: resource names value: full endpoint urls (Strings) eg. 'http://localhost:6868/api/search'
    */
-  createEndpoints() {
+  static createEndpoints() {
     const endPoints = {};
     this.entityArr.forEach((ent) => {
       const { name } = ent;
