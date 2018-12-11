@@ -6,7 +6,7 @@ clear_recent() : function deleting recent searches key in redis DB
 """
 
 import dbcontroller
-from dbcontroller import redis_instance
+from dbcontroller.redis_instance import create_rconn
 from flask import jsonify
 
 
@@ -34,14 +34,12 @@ class RecentSearchControl:
 
     @recent_searches.setter
     def recent_searches(self, value):
-        rset = self._rconn.smembers(self._rset_key)
-
-        search_list = [
-            self._decoder(member) for member in rset if len(self._decoder(member)) > 0
-        ]
-        print("Recent SEARCH LIST", search_list)
-        value = jsonify(search_list)
-        self._recent_searches = value
+        if not value:
+            self._recent_searches = self._parse_recent()
+        else:
+            print(
+                "self._recent_searches argument should not be passed into constructor"
+            )
 
     def update_recent_searches(self):
         self._rconn.sadd(self._rset_key, self._query)
@@ -52,20 +50,25 @@ class RecentSearchControl:
         print("Successfully deleted Key")
         pass
 
+    def _parse_recent(self):
+        rset = self._rconn.smembers(self._rset_key)
+
+        search_list = [
+            self._decoder(member) for member in rset if len(self._decoder(member)) > 0
+        ]
+        print("Recent SEARCH LIST", search_list)
+
+        return jsonify(search_list)
+
     def _decoder(self, item):
         return item.decode("utf-8")
 
 
-def _rconn():
-    """Returns an instance/connection to the redis db"""
-    return redis_instance.create_rconn()
-
-
 def create_controller(query=None):
     if query:
-        controller = RecentSearchControl(_rconn(), query)
+        controller = RecentSearchControl(create_rconn(), query)
     elif not query:
-        controller = RecentSearchControl(_rconn())
+        controller = RecentSearchControl(create_rconn())
 
     return controller
 
@@ -85,8 +88,10 @@ def update_recent(query):
     query: string
         string from user input search
     """
-    return create_controller(query).update_recent_searches()
+    controller = create_controller(query)
+    return controller.update_recent_searches()
 
 
 def clear_recent():
-    return create_controller().clear_recent_searches()
+    controller = create_controller()
+    return controller.clear_recent_searches()

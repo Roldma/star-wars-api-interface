@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../../resources/axiosconf';
-import api from '../../../resources/api/ApiEndpoints';
+import api from '../../../routes/ApiEndpoints';
 
 import SearchBar from './searchBar.jsx';
 import RecentSearchListDisplay from './recentSearchListDisplay.jsx';
