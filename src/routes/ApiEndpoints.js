@@ -14,25 +14,15 @@ class ApiEndpoints {
    */
   constructor({ baseUrl }, entityArr) {
     this.baseUrl = baseUrl;
-    this._endpoints = endpoints;
     this.entityArr = entityArr;
-  }
-
-  get endpoints() {
-    return this._endpoints;
-  }
-
-  set endpoints(val) {
-    if (typeof val === 'object') {
-      this._endpoints = this.createEndpoints();
-    }
+    this.endpoints = this.createEndpoints();
   }
 
   /**
    * Parses this.entityArr and creates an object containing endpoint urls (strings)
    * Returns an Object key: resource names value: full endpoint urls (Strings) eg. 'http://localhost:6868/api/search'
    */
-  static createEndpoints() {
+  createEndpoints() {
     const endPoints = {};
     this.entityArr.forEach((ent) => {
       const { name } = ent;
@@ -63,10 +53,8 @@ class ApiEndpoints {
 const createEndpoints = (endpointList) => {
   const baseUrl = { baseUrl: 'http://localhost:6868' };
   const apiEndpoints = new ApiEndpoints(baseUrl, endpointList);
-
   return apiEndpoints.endpoints;
 };
 
 const endpoints = createEndpoints(resourceNames);
-console.log(endpoints);
 export default endpoints;
