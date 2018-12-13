@@ -1,13 +1,12 @@
 """
-SearchResponse : class used to set/get search results
-create_search_results(arg:string) : function to return search results member of SearchResponse
+BasicSearchItem: used to set/get search results
 """
 
 import requests
 from flask import jsonify
 
 
-class SearchResponse:
+class BasicSearchItem:
     """
     Class used to create a search response from the official star wars API
     
@@ -42,10 +41,3 @@ class SearchResponse:
         print("RESPONSE DATA", response_data)
         return jsoned_response
 
-    def __repr__(self):
-        return "{} Response from SWAPI".format(self.results)
-
-
-def create_search_results(query):
-    search_results = SearchResponse(query)
-    return search_results.results
