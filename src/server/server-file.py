@@ -1,15 +1,13 @@
 import sys
 import os
+import search
 
+print(search)
 from flask import Flask, render_template, request
-from api import recent_search
-from api.search_response import create_search_results
-
+from search import search_controller
+from search.search_controller import create_controller as search_controller
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
-
-print(sys.path)
-print(create_search_results)
 
 
 @app.route("/")
@@ -49,25 +47,29 @@ def search():
     """
 
     query = (request.args["category"], request.args["input"])
-    results = create_search_results(query)
+    controller = search_controller(q=query, search_type="basic")
+    results = controller.get_results()
     return results
 
 
 @app.route("/api/recent/<resource>/", methods=["POST", "GET", "DELETE"])
 def recent_search_list(resource):
+    search_type = "recent"
     if resource == "list":
         if request.method == "GET":
-            return recent_search.get_recent()
+            controller = search_controller(q=None, search_type=search_type)
+            return controller.get_results()
 
         elif request.method == "POST":
             json_data = request.get_json()
             query = json_data["input"]
-
-            recent_search.update_recent(query)
+            controller = search_controller(q=query, search_type=search_type)
+            controller.update_recent()
             return "Recent Search List updated"
 
         elif request.method == "DELETE":
-            recent_search.clear_recent()
+            controller = search_controller(q=None, search_type=search_type)
+            controller.clear_recent()
             return "Recent Search list cleared"
 
 
