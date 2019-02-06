@@ -14,6 +14,7 @@ const resourceNames = () => ({
   bookmarks: {
     name: 'bookmarks',
   },
+  
 });
 
 const createList = item => Object.values(item);
