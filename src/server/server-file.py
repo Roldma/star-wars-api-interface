@@ -3,7 +3,7 @@ import os
 import search as search_api
 
 from flask import Flask, render_template, request
-from search_api import search_controller
+from search import search_controller
 from search.search_controller import create_controller as search_controller
 
 app = Flask(__name__, static_folder="../../static", template_folder="../../public")
