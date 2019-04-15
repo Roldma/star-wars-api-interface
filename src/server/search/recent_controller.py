@@ -1,2 +1,0 @@
-import recent_search
-

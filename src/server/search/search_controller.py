@@ -64,7 +64,7 @@ class SearchController:
             return "Error has occured clearing recent list"
 
 
-def create_controller(*, q, search_type):
+def create_controller(q, search_type):
     """
     Function to instantiate SearchController
     

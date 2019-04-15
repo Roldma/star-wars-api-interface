@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SearchCategories from './searchCategories.jsx';
 
 class SearchBar extends Component {
   constructor() {
@@ -57,46 +58,6 @@ class SearchBar extends Component {
 
   render() {
     const categories = ['People', 'Planets', 'Species', 'Starships', 'Vehicles'];
-    let uniqueId = 0;
-
-    const categoryButtons = categories.map((category) => {
-      uniqueId += 1;
-      const validReqCategory = `${category[0].toLowerCase()}${category.slice(1)}`;
-      if (category === 'People') {
-        return (
-          <span key={`catSpanButt${uniqueId}`}>
-            <input
-              key={`catBut${uniqueId}`}
-              type="radio"
-              value={validReqCategory}
-              id={category}
-              name="categorySelect"
-              onChange={this.updateCategory}
-              defaultChecked
-            />
-            <label id={`${category.toLowerCase()}_radio`} htmlFor={validReqCategory}>
-              {category}
-            </label>
-          </span>
-        );
-      }
-
-      return (
-        <span key={`catSpanButt${uniqueId}`}>
-          <input
-            key={`catBut${uniqueId}`}
-            type="radio"
-            id={category}
-            value={validReqCategory}
-            name="categorySelect"
-            onChange={this.updateCategory}
-          />
-          <label id={`${category.toLowerCase()}_radio`} htmlFor={category}>
-            {category}
-          </label>
-        </span>
-      );
-    });
 
     return (
       <div>
@@ -110,7 +71,7 @@ class SearchBar extends Component {
               onChange={this.textFill}
               value={this.state.inputValue}
             />
-            <div>{categoryButtons}</div>
+            <SearchCategories categories={categories} updateCategory={this.updateCategory} />
           </fieldset>
         </form>
       </div>
