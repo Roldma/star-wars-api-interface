@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Roldma/star-wars-api-challenge#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.0",
+    "@babel/core": "^7.20.7",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel": "^6.23.0",
